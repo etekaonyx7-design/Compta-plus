@@ -1,0 +1,942 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0A192F">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="COMPTA+">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="icon" type="image/svg+xml" href="icons/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<title>COMPTA+</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="COMPTA+ : application gratuite de gestion commerciale en FCFA pour les petits commerçants du Bénin et d'Afrique francophone. Stock, ventes, clients, crédits, dépenses et bénéfice.">
+<style>
+:root{--blue:#0056D2;--blue-ink:#0056D2;--navy:#0A192F;--navy2:#14294A;--bg:#F8F9FA;--card:#FFFFFF;--fg:#212529;--muted:#5A6570;--bd:#7B8794;--line:#E2E6EA;--soft:#F1F4F8;--ok:#0F7B55;--ok-bg:#E3F4EC;--err:#C62828;--err-bg:#FCEAEA;--warn:#8A5A00;--warn-bg:#FFF1CC;--info-bg:#E6EFFC;--c1:#0056D2;--c2:#B45309;--ok-solid:#0F7B55;--err-solid:#B3261E;--shadow:0 1px 2px rgba(10,25,47,.06),0 2px 8px rgba(10,25,47,.04);--font:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;--disp:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--blue-ink:#7DB0FF;--bg:#0B1322;--card:#111D31;--fg:#E8EDF5;--muted:#9AA7B8;--line:#22314A;--bd:#6B7E9C;--soft:#17253C;--ok:#4FD1A1;--ok-bg:#12332A;--err:#FF8A8A;--err-bg:#3A1A1E;--warn:#F5C451;--warn-bg:#3A2E10;--info-bg:#10264A;--c1:#4D8DF5;--c2:#F0B429;--shadow:none;color-scheme:dark}}
+:root[data-theme="dark"]{--blue-ink:#7DB0FF;--bg:#0B1322;--card:#111D31;--fg:#E8EDF5;--muted:#9AA7B8;--line:#22314A;--bd:#6B7E9C;--soft:#17253C;--ok:#4FD1A1;--ok-bg:#12332A;--err:#FF8A8A;--err-bg:#3A1A1E;--warn:#F5C451;--warn-bg:#3A2E10;--info-bg:#10264A;--c1:#4D8DF5;--c2:#F0B429;--shadow:none;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font);font-size:15px;line-height:1.5;-webkit-text-size-adjust:100%}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--navy)}
+body.pub::before{background:var(--card)}
+h1,h2,h3,h4{font-family:var(--disp);margin:0;text-wrap:balance;letter-spacing:-.01em;line-height:1.2}
+h1{font-size:1.6rem}h2{font-size:1.25rem}h3{font-size:1.05rem}
+p{margin:0}a{color:var(--blue-ink)}
+button{font-family:inherit}
+.muted{color:var(--muted)}.sm{font-size:.85rem}.num{font-variant-numeric:tabular-nums;white-space:nowrap}.r{text-align:right}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 16px;border-radius:10px;border:1px solid transparent;font-weight:600;font-size:.95rem;cursor:pointer;text-decoration:none;line-height:1}
+.btn svg{width:18px;height:18px;flex:none}
+.btn-p{background:var(--blue);color:#fff}.btn-p:hover{background:#0048B0}
+.btn-s{background:var(--card);border-color:var(--bd);color:var(--fg)}.btn-s:hover{background:var(--soft)}
+.btn-d{background:var(--err-bg);color:var(--err)}
+.btn-sm{min-height:36px;padding:0 12px;font-size:.85rem;border-radius:8px}
+.btn-block{width:100%}.btn[disabled]{opacity:.5;cursor:not-allowed}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.in{width:100%;min-height:44px;padding:8px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--fg);font:inherit;font-size:16px}
+textarea.in{min-height:80px;resize:vertical}
+label.f{display:grid;gap:6px;font-weight:600;font-size:.88rem}
+div.f{display:grid;gap:6px;font-size:.88rem}div.f>label{font-weight:600}
+main:focus{outline:none}
+label.f .h,div.f .h{font-weight:400;color:var(--muted);font-size:.8rem}
+.fg{display:grid;gap:14px}.row2{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.ferr{background:var(--err-bg);color:var(--err);padding:10px 12px;border-radius:10px;font-size:.88rem;font-weight:500}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:16px;min-width:0}
+.grid{display:grid;gap:12px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.kpi{display:grid;gap:4px}.kpi .lbl{font-size:.82rem;color:var(--muted);font-weight:600}
+.kpi .val{font-family:var(--disp);font-size:1.55rem;font-weight:700;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.kpi.sm2 .val{font-size:1.15rem}.kpi .sub{font-size:.8rem;color:var(--muted)}
+.pos{color:var(--ok)}.neg{color:var(--err)}
+.bd{display:inline-block;padding:2px 10px;border-radius:6px;font-size:.76rem;font-weight:600;white-space:nowrap}
+.bd.ok{background:var(--ok-bg);color:var(--ok)}.bd.warn{background:var(--warn-bg);color:var(--warn)}.bd.err{background:var(--err-bg);color:var(--err)}.bd.info{background:var(--info-bg);color:var(--blue-ink)}.bd.gray{background:var(--soft);color:var(--muted)}
+.head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.head .acts{display:flex;flex-wrap:wrap;gap:8px}
+.stack{display:grid;gap:16px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{min-height:44px;padding:0 16px;border-radius:8px;border:1px solid var(--bd);background:var(--card);color:var(--fg);font-weight:600;font-size:.85rem;cursor:pointer}
+.chip.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.pb{display:grid;gap:8px;margin-bottom:16px}.pcustom{display:flex;flex-wrap:wrap;gap:10px;align-items:center}.pcustom label{display:flex;align-items:center;gap:8px;font-size:.88rem}.pcustom .in{width:auto}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:16px;overflow-x:auto}
+.tab{min-height:44px;padding:0 14px;border:0;background:none;color:var(--muted);font-weight:600;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap}
+.tab.on{color:var(--blue-ink);border-bottom-color:var(--blue)}
+.searchbar{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px}.searchbar .in{flex:1 1 200px;width:auto}.searchbar select.in{flex:0 1 180px}
+.tw{overflow-x:auto}
+table.rt{width:100%;border-collapse:collapse;font-size:.9rem}
+.rt th{text-align:left;font-size:.76rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+.rt td{padding:10px;border-bottom:1px solid var(--line);vertical-align:middle}
+.rt .r{text-align:right}.rt td.acts{white-space:nowrap}
+.rt td.acts .btn{margin-right:6px}
+.empty{text-align:center;padding:36px 16px;display:grid;gap:8px;justify-items:center}
+.empty b{font-family:var(--disp);font-size:1.05rem}.empty p{color:var(--muted);max-width:40ch}
+.hb{display:grid;gap:10px}.hb .it{display:grid;gap:4px}.hb .t{display:flex;justify-content:space-between;gap:10px;font-size:.88rem}
+.hb .bar{height:10px;border-radius:6px;background:var(--soft);overflow:hidden}.hb .bar i{display:block;height:100%;background:var(--c1);border-radius:6px}
+svg.ch{width:100%;height:auto;display:block}.gl{stroke:var(--line);stroke-width:1}.ax{fill:var(--muted);font-size:13px;font-family:var(--font)}.b1{fill:var(--c1)}.b2{fill:var(--c2)}
+.lg{display:flex;gap:14px;font-size:.82rem;color:var(--muted);margin-top:6px}.lg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px}
+.alert{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:10px;font-size:.9rem}
+.alert.warn{background:var(--warn-bg);color:var(--warn)}.alert.err{background:var(--err-bg);color:var(--err)}.alert svg{width:18px;height:18px;flex:none;margin-top:2px}
+.act{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:.9rem;justify-content:space-between}.act:last-child{border:0}
+.demo{background:var(--warn-bg);color:var(--warn);padding:8px 16px;font-size:.85rem;font-weight:600;text-align:center}
+.shell{min-height:100vh}.side{display:none}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:52px}
+.main{padding-block:16px 100px}.content{max-width:1100px;margin:0 auto}
+.logo{display:inline-flex;align-items:center;gap:10px;font-family:var(--disp);font-weight:700;font-size:1.15rem;text-decoration:none;color:inherit}
+.logo i{display:grid;place-items:center;width:32px;height:32px;border-radius:9px;background:var(--blue);color:#fff;font-style:normal;font-size:.95rem}
+.bn{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--card);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px))}
+.bn a,.bn button{display:grid;justify-items:center;gap:2px;padding:6px 0;border:0;background:none;color:var(--muted);font-size:.7rem;font-weight:600;text-decoration:none;cursor:pointer;min-height:48px}
+.bn svg{width:22px;height:22px}.bn .on{color:var(--blue-ink)}
+.bn .sell span.c{display:grid;place-items:center;width:44px;height:44px;margin-top:-18px;border-radius:12px;background:var(--blue);color:#fff;box-shadow:0 4px 12px rgba(0,86,210,.4)}
+.nvbadge{background:var(--err-solid);color:#fff;border-radius:6px;font-size:.68rem;padding:0 6px;margin-left:auto}
+.ov{position:fixed;inset:0;background:rgba(10,25,47,.6);z-index:80;display:flex;align-items:flex-end;justify-content:center}
+.md{background:var(--card);color:var(--fg);width:100%;max-width:560px;max-height:92%;overflow:auto;border-radius:18px 18px 0 0;padding:20px max(16px,env(safe-area-inset-left,0px)) calc(20px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-right,0px))}
+.md.wide{max-width:780px}.md .mh{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
+.xb{border:0;background:var(--soft);color:var(--fg);width:36px;height:36px;border-radius:10px;cursor:pointer;display:grid;place-items:center}.xb svg{width:18px;height:18px}
+#toasts{position:fixed;left:0;right:0;bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:90;display:grid;gap:8px;justify-items:center;pointer-events:none;padding:0 16px}
+.toast{background:var(--navy);color:#fff;padding:10px 16px;border-radius:10px;font-size:.9rem;font-weight:500;box-shadow:0 6px 20px rgba(0,0,0,.25);max-width:420px}.toast.err{background:var(--err-solid);color:#fff}.toast.ok{background:var(--ok-solid);color:#fff}
+.posgrid{display:grid;gap:16px}.plist{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.ptile{text-align:left;border:1px solid var(--bd);background:var(--card);color:var(--fg);border-radius:12px;padding:12px;cursor:pointer;display:grid;gap:4px;min-height:84px}
+.ptile:hover{border-color:var(--blue)}.ptile[disabled]{opacity:.5;cursor:not-allowed}.ptile b{font-size:.92rem}
+.cart{display:none}.cart.open{display:block;position:fixed;inset:0;z-index:60;background:var(--card);overflow:auto;padding:calc(12px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) 24px max(16px,env(safe-area-inset-left,0px))}
+.line{display:grid;gap:8px;padding:10px 0;border-bottom:1px solid var(--line)}
+.line .l1{display:flex;justify-content:space-between;gap:8px;font-weight:600}
+.line .l2{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.line .in{width:110px;min-height:38px}
+.step{display:inline-flex;align-items:center;border:1px solid var(--bd);border-radius:10px;overflow:hidden}
+.step button{width:38px;height:38px;border:0;background:var(--soft);color:var(--fg);cursor:pointer;display:grid;place-items:center}.step button svg{width:16px;height:16px}
+.step input{width:52px;min-height:38px;border:0;text-align:center;background:var(--card);color:var(--fg);font:inherit;font-size:16px}
+.tot{display:grid;gap:6px;padding:12px 0}.tot div{display:flex;justify-content:space-between}.tot .big{font-family:var(--disp);font-size:1.3rem;font-weight:700}
+.posbar{position:fixed;left:0;right:0;bottom:calc(64px + env(safe-area-inset-bottom,0px));z-index:29;padding:0 max(12px,env(safe-area-inset-right,0px)) 8px max(12px,env(safe-area-inset-left,0px))}
+.posbar .btn{width:100%;justify-content:space-between;min-height:50px}
+.receipt{border:1px dashed var(--line);border-radius:12px;padding:16px;display:grid;gap:8px;background:var(--bg)}
+.receipt .rl{display:flex;justify-content:space-between;gap:10px;font-size:.9rem}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.82rem;white-space:pre-wrap;word-break:break-word}
+.pub .wrap{max-width:1100px;margin:0 auto}
+.ph{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--card);border-bottom:1px solid var(--line)}
+.ph .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:60px}
+.ph nav{display:none;gap:4px}.ph nav button{border:0;background:none;color:var(--fg);font-weight:600;padding:8px 12px;cursor:pointer;border-radius:8px}
+.ph .ra{display:flex;gap:8px}
+.hero{padding-block:28px 36px;display:grid;gap:24px;align-items:center}
+.hero h1{font-size:2rem;line-height:1.1}.hero .lead{color:var(--muted);font-size:1.05rem;margin-top:12px;max-width:56ch}.hero h1{max-width:22ch}
+.sec{padding-block:36px}.sec h2{font-size:1.5rem;margin-bottom:6px}.sec .sub{color:var(--muted);margin-bottom:20px}
+.gfeat{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}.feat{display:grid;gap:8px;align-content:start}.feat i{display:grid;place-items:center;width:40px;height:40px;border-radius:10px;background:var(--info-bg);color:var(--blue-ink)}.feat svg{width:22px;height:22px}
+.band{background:var(--navy);color:#fff}.band .sub{color:#B8C4D6}
+.adv{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));padding:0;margin:0;list-style:none}
+.adv li{display:flex;gap:10px;align-items:flex-start;padding:12px;border-radius:12px;background:var(--navy2)}.adv svg{width:20px;height:20px;color:#7DB0FF;flex:none;margin-top:2px}
+.foot{background:var(--card);border-top:1px solid var(--line);padding-block:28px 40px}.foot .cols{display:grid;gap:20px}.foot button.lk{border:0;background:none;color:var(--muted);padding:6px 0;text-align:left;cursor:pointer;font:inherit}
+.auth{min-height:100vh;display:grid;place-items:center;padding-block:24px}.auth .card{width:100%;max-width:460px}
+@media (min-width:700px){.ov{align-items:center}.md{border-radius:18px;max-height:88%}.ph nav{display:flex}.hero h1{font-size:2.6rem}.foot .cols{grid-template-columns:2fr 1fr 1fr}}
+@media (min-width:900px){
+.side{display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;width:248px;background:var(--navy);color:#fff;padding:20px 12px 16px max(12px,env(safe-area-inset-left,0px));z-index:20}
+.top,.bn,.posbar{display:none}.main{margin-left:248px;padding-bottom:40px}
+.side .logo{padding:0 8px 18px}.side nav{display:grid;gap:2px}
+.side nav a{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;color:#C9D4E5;text-decoration:none;font-weight:500}
+.side nav a svg{width:20px;height:20px}.side nav a:hover{background:rgba(255,255,255,.06)}
+.side nav a.on{background:rgba(255,255,255,.09);color:#fff;box-shadow:inset 3px 0 0 var(--blue)}
+.side .me{margin-top:auto;padding:12px 8px 0;border-top:1px solid rgba(255,255,255,.12);display:grid;gap:8px}.side .me b{display:block}.side .me .sm{color:#9FB0C8}
+.side .me button{display:flex;align-items:center;gap:8px;background:none;border:0;color:#C9D4E5;cursor:pointer;padding:8px 0;font:inherit}.side .me svg{width:18px;height:18px}
+.posgrid{grid-template-columns:1fr 380px;align-items:start}
+.cart{display:block;position:sticky;top:16px;border:1px solid var(--line);border-radius:14px;padding:16px;background:var(--card);box-shadow:var(--shadow)}
+.cart.open{position:sticky;inset:auto;z-index:auto;overflow:visible;padding:16px}.cart .cx{display:none}
+#toasts{bottom:24px}}
+@media (max-width:699px){
+table.rt thead{display:none}table.rt,.rt tbody{display:block}
+.rt tr{display:block;border:1px solid var(--line);border-radius:12px;padding:6px 12px;margin-bottom:10px;background:var(--card)}
+.rt td{display:flex;justify-content:space-between;gap:12px;border:0;padding:6px 0;text-align:right}
+.rt td::before{content:attr(data-label);color:var(--muted);font-weight:600;font-size:.8rem;text-align:left}
+.rt td[data-label=""]::before{display:none}.rt td.acts{justify-content:flex-start;flex-wrap:wrap;gap:6px}}
+button,a,.chip,.ptile,.tab{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.skip{position:absolute;left:-9999px;top:8px;z-index:100;background:var(--blue);color:#fff;padding:10px 16px;border-radius:8px;font-weight:600}
+.skip:focus{left:8px}
+.pw{position:relative}.pw .in{padding-right:96px}
+.pw button{position:absolute;right:4px;top:4px;height:36px;min-width:44px;padding:0 10px;border:0;border-radius:8px;background:var(--soft);color:var(--fg);font-weight:600;font-size:.82rem;cursor:pointer}
+.fgot{display:inline-flex;align-items:center;font-size:.92rem;font-weight:600;min-height:44px}
+.hatch{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;background:repeating-linear-gradient(45deg,var(--c2) 0 3px,var(--card) 3px 6px);border:1px solid var(--c2)}
+.legal{max-width:78ch}.legal h1{margin-bottom:6px}.legal h2{font-size:1.2rem;margin:28px 0 8px}.legal h3{font-size:1rem;margin:16px 0 6px}
+.legal p,.legal li{margin:0 0 10px;line-height:1.65}.legal ul{padding-left:20px;margin:0 0 10px}
+.legal .meta{color:var(--muted);font-size:.88rem;margin-bottom:18px}
+.legal .tw{margin:10px 0 16px}.legal table.rt td,.legal table.rt th{vertical-align:top}
+.legal .todo{background:var(--warn-bg);color:var(--warn);padding:2px 8px;border-radius:6px;font-weight:600}
+.legal .note{background:var(--info-bg);border-radius:12px;padding:12px 14px;margin:12px 0}
+.legalnav{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px}
+.legalnav a{min-height:44px;display:inline-flex;align-items:center;padding:0 14px;border:1px solid var(--bd);border-radius:8px;text-decoration:none;font-weight:600;font-size:.88rem;color:var(--fg);background:var(--card)}
+.legalnav a[aria-current=page]{background:var(--blue);border-color:var(--blue);color:#fff}
+.chk{display:flex;gap:12px;align-items:flex-start;font-size:.92rem;line-height:1.45}.chk input{width:22px;height:22px;flex:none;margin-top:1px}
+@media (max-width:699px){.hero .chips .btn{flex:1 1 100%}.btn-sm{min-height:44px;padding:0 14px}.xb{width:44px;height:44px}.hero h1{font-size:1.75rem}.step button{width:44px;height:44px}.step input{min-height:44px}.line .in{min-height:44px}.bn a,.bn button{min-height:52px}}
+
+.vid{display:block;width:100%;max-width:360px;aspect-ratio:9/16;margin:12px auto;border-radius:12px;background:#0A192F}
+.legal h3{margin:18px 0 6px;font-size:1.05rem}
+</style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"COMPTA+","alternateName":"COMPTA Plus","applicationCategory":"BusinessApplication","operatingSystem":"Web (navigateur sur téléphone, tablette et ordinateur)","inLanguage":"fr","description":"Application de gestion commerciale pour petits commerçants : produits et stock, ventes et reçus, clients, crédits et paiements, dépenses, chiffre d'affaires, marge et bénéfice estimé, en FCFA (XOF).","audience":{"@type":"BusinessAudience","audienceType":"Petits commerçants, boutiques et vendeurs du Bénin et d'Afrique francophone"},"offers":{"@type":"Offer","price":"0","priceCurrency":"XOF"},"featureList":["Gestion du stock avec alertes","Ventes et reçus","Clients","Crédits et paiements partiels","Dépenses","Rapports : chiffre d'affaires, marge, bénéfice","Interface mobile"]}</script>
+<noscript><main style="padding:16px;font-family:system-ui,sans-serif;max-width:640px;margin:0 auto"><h1>COMPTA+</h1><p>COMPTA+ est une application web gratuite de gestion commerciale en FCFA pour les petits commerçants du Bénin et d'Afrique francophone : produits et stock, ventes et reçus, clients, crédits, dépenses, chiffre d'affaires, marge et bénéfice estimé.</p><p>JavaScript est nécessaire pour utiliser l'application. Activez-le dans votre navigateur puis rechargez la page. Vos données restent sur votre appareil.</p></main></noscript>
+<script>if('serviceWorker' in navigator&&location.protocol!=='file:'){window.addEventListener('load',function(){try{navigator.serviceWorker.register('sw.js').catch(function(){});}catch(e){}});}</script>
+<div id="app"></div>
+<div id="modal-root"></div>
+<div id="toasts" aria-live="polite"></div>
+<script>
+const METHODS=['Espèces','MTN MoMo','Moov Money','Autre'];
+const EXP_CATS=['Transport','Approvisionnement','Loyer','Électricité','Eau','Communication','Entretien','Salaires','Autres'];
+const MONTHS=['janv.','févr.','mars','avr.','mai','juin','juil.','août','sept.','oct.','nov.','déc.'];
+class AppError extends Error{}
+function fail(m){throw new AppError(m);}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8);}
+function pad(n,l){return String(n).padStart(l||2,'0');}
+function fmt(n){n=Math.round(Number(n)||0);const s=String(Math.abs(n)).replace(/\B(?=(\d{3})+(?!\d))/g,' ');return (n<0?'−':'')+s+' FCFA';}
+function fmtShort(n){if(n>=1e6)return (n/1e6).toFixed(1).replace('.0','').replace('.',',')+' M';if(n>=1000)return (n/1000).toFixed(1).replace('.0','').replace('.',',')+' k';return String(Math.round(n));}
+function dayKey(x){const d=x instanceof Date?x:new Date(x);return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
+function todayKey(){return dayKey(new Date());}
+function addDays(key,n){const p=key.split('-').map(Number);return dayKey(new Date(p[0],p[1]-1,p[2]+n));}
+function diffDays(a,b){const x=a.split('-').map(Number),y=b.split('-').map(Number);return Math.round((Date.UTC(y[0],y[1]-1,y[2])-Date.UTC(x[0],x[1]-1,x[2]))/864e5);}
+function periodRange(kind,custom){
+ const t=todayKey();const p=t.split('-').map(Number);const y=p[0],m=p[1],d=p[2];
+ if(kind==='today')return{from:t,to:t,label:"Aujourd'hui"};
+ if(kind==='week'){const wd=(new Date(y,m-1,d).getDay()+6)%7;const from=addDays(t,-wd);return{from:from,to:addDays(from,6),label:'Cette semaine'};}
+ if(kind==='month'){return{from:y+'-'+pad(m)+'-01',to:y+'-'+pad(m)+'-'+pad(new Date(y,m,0).getDate()),label:'Ce mois'};}
+ if(kind==='year')return{from:y+'-01-01',to:y+'-12-31',label:'Cette année'};
+ let f=(custom&&custom.from)||t,e=(custom&&custom.to)||t;if(f>e){const x=f;f=e;e=x;}
+ return{from:f,to:e,label:'Période personnalisée'};
+}
+function inRange(k,a,b){return k>=a&&k<=b;}
+function toInt(v,label,opts){
+ opts=opts||{};const s=String(v==null?'':v).trim().replace(/[\s ]/g,'');
+ if(s===''){if(opts.empty!==undefined)return opts.empty;fail('Veuillez renseigner : '+label+'.');}
+ const n=Number(s.replace(',','.'));
+ if(!Number.isFinite(n)||!Number.isInteger(n))fail(label+' doit être un nombre entier.');
+ const min=opts.min===undefined?0:opts.min;
+ if(n<min)fail(min>0?label+' doit être au moins '+min+'.':label+' ne peut pas être négatif.');
+ return n;
+}
+function newState(shop){return{v:1,business:{id:uid(),name:shop||'Ma boutique',phone:'',address:'',type:'',currency:'FCFA',createdAt:new Date().toISOString()},categories:[],products:[],customers:[],sales:[],credits:[],payments:[],expenses:[],movements:[],counters:{sale:0},prefs:{toasts:true,defaultThreshold:5,defaultDueDays:7}};}
+function findP(S,id){return S.products.find(function(x){return x.id===id;});}
+/* ---- Catégories ---- */
+function addCategory(S,name){name=String(name||'').trim();if(!name)fail('Veuillez saisir le nom de la catégorie.');
+ if(S.categories.some(function(c){return c.name.toLowerCase()===name.toLowerCase();}))fail('Cette catégorie existe déjà.');
+ const c={id:uid(),name:name};S.categories.push(c);return c;}
+function renameCategory(S,id,name){name=String(name||'').trim();if(!name)fail('Veuillez saisir le nom de la catégorie.');
+ const c=S.categories.find(function(x){return x.id===id;});if(!c)fail('Catégorie introuvable.');
+ if(S.categories.some(function(x){return x.id!==id&&x.name.toLowerCase()===name.toLowerCase();}))fail('Cette catégorie existe déjà.');c.name=name;return c;}
+function deleteCategory(S,id){if(S.products.some(function(p){return p.categoryId===id;}))fail('Des produits utilisent cette catégorie. Changez leur catégorie avant de la supprimer.');
+ S.categories=S.categories.filter(function(c){return c.id!==id;});}
+/* ---- Produits & stock ---- */
+function readProduct(S,f){
+ const name=String(f.name||'').trim();if(!name)fail('Veuillez renseigner : le nom du produit.');
+ return{name:name,ref:String(f.ref||'').trim(),categoryId:f.categoryId||null,description:String(f.description||'').trim(),
+  buyPrice:toInt(f.buy,"Le prix d'achat"),sellPrice:toInt(f.sell,'Le prix de vente'),
+  threshold:toInt(f.threshold,"Le seuil d'alerte",{empty:S.prefs.defaultThreshold})};
+}
+function addProduct(S,f){
+ const b=readProduct(S,f);const qty=toInt(f.qty,'La quantité',{empty:0});
+ const p=Object.assign({id:uid(),qty:qty,createdAt:new Date().toISOString()},b);S.products.push(p);
+ if(qty>0)S.movements.push({id:uid(),productId:p.id,type:'entrée',qty:qty,motif:'Stock initial',saleId:null,date:p.createdAt});
+ return p;
+}
+function updateProduct(S,id,f){const p=findP(S,id);if(!p)fail('Produit introuvable.');Object.assign(p,readProduct(S,f));return p;}
+function deleteProduct(S,id){
+ if(S.sales.some(function(s){return s.items.some(function(l){return l.productId===id;});}))fail('Ce produit a déjà été vendu et ne peut pas être supprimé. Mettez son stock à 0 à la place.');
+ S.products=S.products.filter(function(p){return p.id!==id;});S.movements=S.movements.filter(function(m){return m.productId!==id;});
+}
+function adjustStock(S,id,type,qty,motif){
+ const p=findP(S,id);if(!p)fail('Produit introuvable.');let delta;
+ if(type==='entrée'){qty=toInt(qty,'La quantité',{min:1});delta=qty;}
+ else if(type==='sortie'){qty=toInt(qty,'La quantité',{min:1});if(qty>p.qty)fail('Sortie impossible : le stock disponible est de '+p.qty+'.');delta=-qty;}
+ else if(type==='ajustement'){qty=toInt(qty,'La nouvelle quantité');delta=qty-p.qty;}
+ else fail('Type de mouvement invalide.');
+ p.qty+=delta;
+ if(delta!==0)S.movements.push({id:uid(),productId:id,type:type,qty:delta,motif:String(motif||'').trim(),saleId:null,date:new Date().toISOString()});
+ return p;
+}
+function stockStatus(p){return p.qty===0?'rupture':(p.qty<=p.threshold?'faible':'ok');}
+/* ---- Clients ---- */
+function addCustomer(S,f){const name=String(f.name||'').trim();if(!name)fail('Veuillez renseigner : le nom du client.');
+ const c={id:uid(),name:name,phone:String(f.phone||'').trim(),address:String(f.address||'').trim(),notes:String(f.notes||'').trim(),createdAt:new Date().toISOString()};S.customers.push(c);return c;}
+function updateCustomer(S,id,f){const c=S.customers.find(function(x){return x.id===id;});if(!c)fail('Client introuvable.');
+ const name=String(f.name||'').trim();if(!name)fail('Veuillez renseigner : le nom du client.');
+ c.name=name;c.phone=String(f.phone||'').trim();c.address=String(f.address||'').trim();c.notes=String(f.notes||'').trim();return c;}
+function deleteCustomer(S,id){if(S.sales.some(function(s){return s.customerId===id;}))fail('Ce client a des ventes enregistrées et ne peut pas être supprimé.');
+ S.customers=S.customers.filter(function(c){return c.id!==id;});}
+/* ---- Ventes ---- */
+function saleStatus(s){return s.balance<=0?'Payée':(s.paid<=0?'Impayée':'Partielle');}
+function creditStatus(c,today){today=today||todayKey();
+ if(c.balance<=0)return'Payé';if(c.due&&c.due<today)return'En retard';return c.paid<=0?'Impayé':'Partiellement payé';}
+function createSale(S,input){
+ const items=input.items||[];if(!items.length)fail('Le panier est vide. Ajoutez au moins un produit.');
+ const need={},lines=[];
+ items.forEach(function(it){
+  const p=findP(S,it.productId);if(!p)fail('Produit introuvable.');
+  const qty=toInt(it.qty,'La quantité',{min:1});const price=toInt(it.price,'Le prix de '+p.name);
+  need[p.id]=(need[p.id]||0)+qty;
+  lines.push({productId:p.id,name:p.name,qty:qty,unitPrice:price,unitCost:p.buyPrice,subtotal:qty*price});
+ });
+ Object.keys(need).forEach(function(id){const p=findP(S,id);if(need[id]>p.qty)fail('Stock insuffisant pour '+p.name+' (disponible : '+p.qty+').');});
+ const total=lines.reduce(function(a,l){return a+l.subtotal;},0);
+ const method=input.method||'Espèces';const customerId=input.customerId||null;
+ if(customerId&&!S.customers.some(function(c){return c.id===customerId;}))fail('Client introuvable.');
+ let paid,payMethod,due=null;
+ if(method==='Crédit'){
+  if(!customerId)fail('Sélectionnez un client pour une vente à crédit.');
+  paid=toInt(input.paid,'Le montant payé',{empty:0});
+  if(paid>total)fail('Le montant payé dépasse le total de la vente.');
+  payMethod=input.payMethod||'Espèces';
+  if(total-paid>0)due=input.due||addDays(todayKey(),S.prefs.defaultDueDays||7);
+ }else{if(METHODS.indexOf(method)<0)fail('Mode de paiement invalide.');paid=total;payMethod=method;}
+ const date=input.date||new Date().toISOString();const number='V-'+pad(++S.counters.sale,4);
+ const sale={id:uid(),number:number,date:date,customerId:customerId,items:lines,total:total,paid:paid,balance:total-paid,method:method,createdBy:input.userId||null};
+ S.sales.push(sale);
+ Object.keys(need).forEach(function(id){const p=findP(S,id);p.qty-=need[id];
+  S.movements.push({id:uid(),productId:id,type:'vente',qty:-need[id],motif:'Vente '+number,saleId:sale.id,date:date});});
+ let credit=null;
+ if(sale.balance>0){credit={id:uid(),saleId:sale.id,customerId:customerId,initial:total,paid:paid,balance:sale.balance,due:due,createdAt:date};S.credits.push(credit);}
+ if(paid>0)S.payments.push({id:uid(),saleId:sale.id,creditId:credit?credit.id:null,customerId:customerId,amount:paid,method:payMethod,reference:String(input.reference||'').trim(),date:date,initial:true,note:method==='Crédit'?'Paiement initial':'Paiement comptant'});
+ return sale;
+}
+function payCredit(S,creditId,amount,method,reference,date){
+ const c=S.credits.find(function(x){return x.id===creditId;});if(!c)fail('Crédit introuvable.');
+ amount=toInt(amount,'Le montant du paiement',{min:1});
+ if(amount>c.balance)fail('Le montant du paiement dépasse le montant restant.');
+ if(METHODS.indexOf(method)<0)fail('Mode de paiement invalide.');
+ const s=S.sales.find(function(x){return x.id===c.saleId;});
+ c.paid+=amount;c.balance=c.initial-c.paid;s.paid=c.paid;s.balance=c.balance;
+ const pay={id:uid(),saleId:c.saleId,creditId:c.id,customerId:c.customerId,amount:amount,method:method,reference:String(reference||'').trim(),date:date||new Date().toISOString(),initial:false,note:'Paiement'};
+ S.payments.push(pay);return pay;
+}
+/* ---- Dépenses ---- */
+function readExpense(f){
+ const description=String(f.description||'').trim();if(!description)fail('Veuillez renseigner : la description.');
+ const amount=toInt(f.amount,'Le montant',{min:1});
+ const date=String(f.date||'').trim()||todayKey();if(!/^\d{4}-\d{2}-\d{2}$/.test(date))fail('La date est invalide.');
+ return{description:description,category:EXP_CATS.indexOf(f.category)>=0?f.category:'Autres',amount:amount,date:date,method:METHODS.indexOf(f.method)>=0?f.method:'Espèces',note:String(f.note||'').trim()};
+}
+function addExpense(S,f){const e=Object.assign({id:uid(),createdAt:new Date().toISOString()},readExpense(f));S.expenses.push(e);return e;}
+function updateExpense(S,id,f){const e=S.expenses.find(function(x){return x.id===id;});if(!e)fail('Dépense introuvable.');Object.assign(e,readExpense(f));return e;}
+function deleteExpense(S,id){S.expenses=S.expenses.filter(function(e){return e.id!==id;});}
+/* ---- Statistiques ---- */
+function computeStats(S,from,to){
+ const sales=S.sales.filter(function(s){return inRange(dayKey(s.date),from,to);});
+ const exps=S.expenses.filter(function(e){return inRange(e.date,from,to);});
+ let ca=0,cogs=0,encaisse=0,recevoir=0;const byProd={},byCat={};
+ sales.forEach(function(s){ca+=s.total;encaisse+=s.paid;recevoir+=s.balance;
+  s.items.forEach(function(l){cogs+=l.qty*l.unitCost;
+   const b=byProd[l.productId]||(byProd[l.productId]={name:l.name,qty:0,ca:0});b.qty+=l.qty;b.ca+=l.subtotal;
+   const p=findP(S,l.productId);const cat=p&&p.categoryId?(S.categories.find(function(c){return c.id===p.categoryId;})||{name:'Sans catégorie'}).name:'Sans catégorie';
+   byCat[cat]=(byCat[cat]||0)+l.subtotal;});});
+ const expByCat={};let depenses=0;exps.forEach(function(e){depenses+=e.amount;expByCat[e.category]=(expByCat[e.category]||0)+e.amount;});
+ return{sales:sales,exps:exps,ca:ca,cogs:cogs,marge:ca-cogs,depenses:depenses,benefice:ca-cogs-depenses,encaisse:encaisse,recevoir:recevoir,nb:sales.length,byProd:byProd,byCat:byCat,expByCat:expByCat};
+}
+function debtByCustomer(S){const m={};S.credits.forEach(function(c){if(c.balance>0)m[c.customerId]=(m[c.customerId]||0)+c.balance;});return m;}
+function globalStats(S){
+ let stockValue=0,low=0,rupt=0;
+ S.products.forEach(function(p){stockValue+=p.qty*p.buyPrice;const st=stockStatus(p);if(st==='faible')low++;if(st==='rupture')rupt++;});
+ const debt=debtByCustomer(S);
+ return{products:S.products.length,stockValue:stockValue,low:low,rupt:rupt,customers:S.customers.length,debtors:Object.keys(debt).length,creditsLeft:S.credits.reduce(function(a,c){return a+c.balance;},0)};
+}
+function toCSV(rows){return rows.map(function(r){return r.map(function(c){c=String(c==null?'':c);return /[;"\n]/.test(c)?'"'+c.replace(/"/g,'""')+'"':c;}).join(';');}).join('\n');}
+/* ---- Scénario de test officiel ---- */
+function runScenario(){
+ const S=newState('Test');const out=[];
+ function chk(l,e,a){out.push({label:l,expected:e,actual:a,ok:e===a});}
+ function fails(l,fn){let ok=false,msg='';try{fn();}catch(e){ok=e instanceof AppError;msg=e.message;}out.push({label:l,expected:'Refusé',actual:ok?'Refusé':'Accepté à tort',ok:ok,msg:msg});}
+ const coca=addProduct(S,{name:'Coca-Cola',buy:350,sell:500,qty:30,threshold:5}),eau=addProduct(S,{name:'Eau',buy:300,sell:400,qty:20,threshold:5});
+ const riz=addProduct(S,{name:'Riz 5 kg',buy:3500,sell:4500,qty:10,threshold:3}),savon=addProduct(S,{name:'Savon',buy:400,sell:600,qty:15,threshold:3});
+ const c1=addCustomer(S,{name:'Client Comptant'}),c2=addCustomer(S,{name:'Client Crédit'});
+ const s1=createSale(S,{customerId:c1.id,method:'Espèces',items:[{productId:coca.id,qty:4,price:500},{productId:eau.id,qty:2,price:400}]});
+ chk('Vente comptant : total (FCFA)',2800,s1.total);chk('Vente comptant : reste',0,s1.balance);
+ chk('Stock Coca-Cola après vente',26,coca.qty);chk('Stock Eau après vente',18,eau.qty);
+ const s2=createSale(S,{customerId:c2.id,method:'Crédit',paid:3000,payMethod:'Espèces',items:[{productId:riz.id,qty:2,price:4500},{productId:savon.id,qty:3,price:600}]});
+ chk('Vente à crédit : total (FCFA)',10800,s2.total);chk('Dette après paiement initial de 3 000',7800,s2.balance);
+ chk('Stock Riz après vente',8,riz.qty);chk('Stock Savon après vente',12,savon.qty);
+ const cr=S.credits.find(function(c){return c.saleId===s2.id;});payCredit(S,cr.id,4000,'Espèces','');
+ chk('Dette restante après paiement de 4 000',3800,cr.balance);chk('Statut du crédit',"Partiellement payé",creditStatus(cr));
+ addExpense(S,{description:'Transport',category:'Transport',amount:2000,date:todayKey(),method:'Espèces'});
+ const t=todayKey(),st=computeStats(S,t,t),g=globalStats(S);
+ chk("Chiffre d'affaires",13600,st.ca);chk('Coût des marchandises vendues',10200,st.cogs);chk('Marge brute',3400,st.marge);
+ chk('Dépenses',2000,st.depenses);chk('Bénéfice estimé',1400,st.benefice);
+ chk('Crédits restants (tableau de bord)',3800,g.creditsLeft);chk('Valeur du stock',47300,g.stockValue);
+ const nPay=S.payments.length;
+ fails('Paiement supérieur au solde refusé',function(){payCredit(S,cr.id,3801,'Espèces','');});
+ chk('Aucun paiement ajouté après refus',nPay,S.payments.length);
+ fails('Vente avec stock insuffisant refusée',function(){createSale(S,{method:'Espèces',items:[{productId:coca.id,qty:999,price:500}]});});
+ chk('Stock Coca-Cola inchangé après refus',26,coca.qty);
+ fails('Quantité négative refusée',function(){createSale(S,{method:'Espèces',items:[{productId:coca.id,qty:-1,price:500}]});});
+ payCredit(S,cr.id,3800,'Espèces','');chk('Statut du crédit une fois soldé','Payé',creditStatus(cr));chk('Statut de la vente une fois soldée','Payée',saleStatus(s2));
+ return out;
+}
+const ICONS={dash:'<rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/>',
+cart:'<path d="M3 4h2l2.4 10.5a1 1 0 001 .8h8.7a1 1 0 001-.8L20 8H6"/><circle cx="9" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/>',
+box:'<path d="M21 8l-9-5-9 5v8l9 5 9-5V8zM3 8l9 5 9-5M12 13v8"/>',
+users:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M16 4.5a3.5 3.5 0 010 7M18 14.4c2.2.6 3.5 2.5 3.5 5.6"/>',
+wallet:'<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M16 14.5h2"/>',
+receipt:'<path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3z"/><path d="M9 8h6M9 12h6"/>',
+chart:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+sliders:'<path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/>',
+plus:'<path d="M12 5v14M5 12h14"/>',minus:'<path d="M5 12h14"/>',
+trash:'<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>',
+edit:'<path d="M4 20h4L19 9l-4-4L4 16v4z"/>',
+search:'<circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/>',
+x:'<path d="M6 6l12 12M18 6L6 18"/>',
+more:'<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>',
+logout:'<path d="M9 4H5v16h4M16 8l4 4-4 4M20 12H9"/>',
+alert:'<path d="M12 3l10 18H2L12 3zM12 10v5M12 18v.5"/>',
+check:'<path d="M5 12l4.5 4.5L19 7"/>',
+eye:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',shield:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/>',
+zap:'<path d="M13 3L5 14h6l-1 7 8-11h-6l1-7z"/>'};
+function ic(n){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(ICONS[n]||'')+'</svg>';}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function fmtDay(k){return k?k.slice(8,10)+'/'+k.slice(5,7)+'/'+k.slice(0,4):'-';}
+function fmtDT(iso){const d=new Date(iso);return fmtDay(dayKey(d))+' '+pad(d.getHours())+':'+pad(d.getMinutes());}
+function badge(t,c){return '<span class="bd '+c+'">'+esc(t)+'</span>';}
+function $(s){return document.querySelector(s);}
+/* ---- Stockage local ---- */
+const store={ok:true,mem:{},
+ probe(){try{localStorage.setItem('cp:probe','1');localStorage.removeItem('cp:probe');}catch(e){this.ok=false;}},
+ get(k){if(!this.ok)return this.mem[k]||null;try{return localStorage.getItem(k);}catch(e){this.ok=false;return this.mem[k]||null;}},
+ set(k,v){if(!this.ok){this.mem[k]=v;return;}try{localStorage.setItem(k,v);}catch(e){this.ok=false;this.mem[k]=v;}},
+ del(k){if(!this.ok){delete this.mem[k];return;}try{localStorage.removeItem(k);}catch(e){delete this.mem[k];}}};
+store.probe();
+function getUsers(){try{return JSON.parse(store.get('cp:users')||'[]');}catch(e){return [];}}
+function setUsers(u){store.set('cp:users',JSON.stringify(u));}
+let S=null,USER=null;
+function save(){if(USER&&S)store.set('cp:data:'+USER.id,JSON.stringify(S));}
+function loadData(u){let d=null;try{d=JSON.parse(store.get('cp:data:'+u.id)||'null');}catch(e){}
+ if(!d||!d.products){d=newState(u.shop);}d.prefs=Object.assign({toasts:true,defaultThreshold:5,defaultDueDays:7},d.prefs||{});return d;}
+async function hashPw(pw,salt){
+ try{const enc=new TextEncoder();const key=await crypto.subtle.importKey('raw',enc.encode(pw),'PBKDF2',false,['deriveBits']);
+  const bits=await crypto.subtle.deriveBits({name:'PBKDF2',salt:enc.encode(salt),iterations:100000,hash:'SHA-256'},key,256);
+  return Array.from(new Uint8Array(bits)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
+ }catch(e){let h=5381;const s=salt+pw;for(let i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))|0;return 'x'+h;}
+}
+function seedDemo(d){
+ const b=addCategory(d,'Boissons'),a=addCategory(d,'Alimentation'),h=addCategory(d,'Hygiène');
+ addProduct(d,{name:'Coca-Cola',categoryId:b.id,buy:350,sell:500,qty:30,threshold:5});addProduct(d,{name:'Eau',categoryId:b.id,buy:300,sell:400,qty:20,threshold:5});
+ addProduct(d,{name:'Riz 5 kg',categoryId:a.id,buy:3500,sell:4500,qty:10,threshold:3});addProduct(d,{name:'Savon',categoryId:h.id,buy:400,sell:600,qty:15,threshold:3});
+ addCustomer(d,{name:'Client Comptant'});addCustomer(d,{name:'Client Crédit',phone:'97 00 00 00'});
+}
+/* ---- État de l'interface ---- */
+const ui={period:'month',custom:{from:'',to:''},q:{},tab:{produits:'liste',rapports:'ventes',parametres:'boutique'},fl:{},cart:[],
+ pos:{customerId:'',method:'Espèces',paid:'',payMethod:'Espèces',ref:'',due:'',cat:''},cartOpen:false,cb:null,last:{},test:null};
+function guard(k){const n=Date.now();if(ui.last[k]&&n-ui.last[k]<700)return true;ui.last[k]=n;return false;}
+function curPeriod(){return periodRange(ui.period,ui.custom);}
+function custName(id){const c=S.customers.find(function(x){return x.id===id;});return c?c.name:'Sans client';}
+function catName(id){const c=S.categories.find(function(x){return x.id===id;});return c?c.name:'Sans catégorie';}
+function toast(msg,type){if(type!=='err'&&S&&S.prefs&&S.prefs.toasts===false)return;
+ const t=document.createElement('div');t.className='toast '+(type||'');t.textContent=msg;$('#toasts').appendChild(t);setTimeout(function(){t.remove();},3600);}
+function showModal(html,wide){$('#modal-root').innerHTML='<div class="ov" data-act="ov"><div class="md'+(wide?' wide':'')+'" role="dialog" aria-modal="true">'+html+'</div></div>';}
+function closeModal(){$('#modal-root').innerHTML='';}
+function mhead(t){return '<div class="mh"><h2>'+esc(t)+'</h2><button class="xb" data-act="modal-close" aria-label="Fermer">'+ic('x')+'</button></div>';}
+function ask(msg,cb,label){ui.cb=cb;showModal(mhead('Confirmation')+'<p>'+esc(msg)+'</p><div class="head" style="margin:20px 0 0"><span></span><div class="acts"><button class="btn btn-s" data-act="modal-close">Annuler</button><button class="btn btn-d" data-act="confirm-yes">'+esc(label||'Confirmer')+'</button></div></div>');}
+function field(label,name,val,opts){opts=opts||{};
+ return '<label class="f">'+esc(label)+(opts.hint?' <span class="h">'+esc(opts.hint)+'</span>':'')+'<input class="in" id="'+opts.id+'" name="'+name+'" type="'+(opts.type||'text')+'" value="'+esc(val==null?'':val)+'"'+(opts.req?' required':'')+(opts.inputmode?' inputmode="'+opts.inputmode+'"':'')+(opts.min!=null?' min="'+opts.min+'"':'')+(opts.ph?' placeholder="'+esc(opts.ph)+'"':'')+(opts.ac?' autocomplete="'+opts.ac+'"':'')+(opts.extra?' '+opts.extra:'')+(opts.dis?' disabled':'')+'></label>';}
+function pwField(id,name,label,ac,hint){return '<div class="f"><label for="'+id+'">'+esc(label)+(hint?' <span class="h">'+esc(hint)+'</span>':'')+'</label><div class="pw"><input class="in" id="'+id+'" name="'+name+'" type="password" required autocomplete="'+ac+'" autocapitalize="none" autocorrect="off" spellcheck="false"><button type="button" data-act="pw-toggle" data-for="'+id+'" aria-controls="'+id+'" aria-pressed="false">Afficher</button></div></div>';}
+function sel(label,name,options,val,id){return '<label class="f">'+esc(label)+'<select class="in" id="'+id+'" name="'+name+'">'+options.map(function(o){const v=Array.isArray(o)?o[0]:o,l=Array.isArray(o)?o[1]:o;return '<option value="'+esc(v)+'"'+(String(v)===String(val)?' selected':'')+'>'+esc(l)+'</option>';}).join('')+'</select></label>';}
+function tbl(cols,rows,empty){
+ if(!rows.length)return empty||'';
+ return '<div class="tw"><table class="rt"><thead><tr>'+cols.map(function(c){return '<th class="'+(c.cls||'')+'">'+c.h+'</th>';}).join('')+'</tr></thead><tbody>'+
+ rows.map(function(r){return '<tr>'+r.map(function(cell,i){return '<td data-label="'+esc(cols[i].h)+'" class="'+(cols[i].cls||'')+'">'+cell+'</td>';}).join('')+'</tr>';}).join('')+'</tbody></table></div>';}
+function emptyState(t,p,btn){return '<div class="empty card"><b>'+esc(t)+'</b><p>'+esc(p)+'</p>'+(btn||'')+'</div>';}
+/* ---- Pages publiques ---- */
+function pubHeader(){
+ return '<header class="ph gut"><div class="wrap"><a class="logo" href="#"><i>C+</i>COMPTA+</a><nav aria-label="Navigation principale">'+
+ '<button data-act="scroll" data-to="contenu">Accueil</button><button data-act="scroll" data-to="fonctionnalites">Fonctionnalités</button><button data-act="scroll" data-to="avantages">Avantages</button><button data-act="scroll" data-to="apropos">À propos</button></nav>'+
+ '<div class="ra"><a class="btn btn-s btn-sm" href="#connexion">Connexion</a><a class="btn btn-p btn-sm" href="#inscription">Créer un compte</a></div></div></header>';}
+function pageLanding(){
+ const feats=[['box','Gestion du stock','Suivez vos produits et recevez des alertes lorsque le stock devient faible.'],['cart','Ventes','Enregistrez rapidement vos ventes et calculez automatiquement les montants.'],['users','Clients','Conservez les informations et l\'historique de vos clients.'],['wallet','Crédits','Suivez les clients qui achètent à crédit et leurs paiements.'],['receipt','Dépenses','Enregistrez et analysez vos dépenses.'],['chart','Rapports','Analysez votre chiffre d\'affaires, vos marges et vos résultats.']];
+ const advs=['Chaque vente fait baisser le stock automatiquement.','Une alerte apparaît quand un produit atteint le seuil que vous avez fixé.','Chaque paiement partiel réduit la dette du client, sans compter deux fois l\'acompte.','Le bénéfice utilise le prix d\'achat connu au moment de la vente.','Le reçu de vente se copie pour l\'envoyer sur WhatsApp.','Vos données restent sur votre appareil. Pas de publicité, pas de suivi.'];
+ return pubHeader()+'<main id="contenu" tabindex="-1"><section class="gut"><div class="wrap hero"><div><h1>Sachez chaque jour ce qu\'il vous reste, ce qu\'on vous doit et ce que vous gagnez.</h1><p class="lead">COMPTA+ tient le stock, les ventes, les crédits clients et les dépenses de votre boutique, et calcule votre bénéfice en FCFA. Gratuit, sans publicité. Vos données restent sur votre téléphone.</p>'+
+ '<div class="chips" style="margin-top:20px"><a class="btn btn-p" href="#inscription">Commencer gratuitement</a><button class="btn btn-s" data-act="demo">Essayer la démonstration</button></div>'+
+ '<p class="muted sm" style="margin-top:14px">Montants en FCFA. Fonctionne sur téléphone, tablette et ordinateur.</p></div></div></section>'+
+ '<section class="gut sec" id="fonctionnalites"><div class="wrap"><h2>Tout ce qu\'il faut pour tenir sa boutique</h2><p class="sub">Six outils qui travaillent avec les mêmes données.</p><div class="grid gfeat">'+
+ feats.map(function(f){return '<div class="card feat"><i>'+ic(f[0])+'</i><h3>'+f[1]+'</h3><p class="muted">'+f[2]+'</p></div>';}).join('')+'</div></div></section>'+
+ '<section class="gut sec band" id="avantages"><div class="wrap"><h2>Ce que COMPTA+ fait à chaque opération</h2><p class="sub">Les calculs partent de ce que vous enregistrez.</p><ul class="adv">'+advs.map(function(a){return '<li>'+ic('check')+'<span>'+a+'</span></li>';}).join('')+'</ul></div></section>'+
+ '<section class="gut sec" id="apropos"><div class="wrap"><h2>À propos</h2><p class="muted" style="max-width:62ch">COMPTA+ est pensé pour les petits commerçants, boutiques et vendeurs du Bénin et d\'Afrique francophone. Le bénéfice est calculé à partir de vos ventes, du prix d\'achat de chaque produit au moment de la vente et de vos dépenses.</p></div></section></main>'+
+ '<footer class="foot gut"><div class="wrap cols"><div><a class="logo" href="#"><i>C+</i>COMPTA+</a><p class="muted sm" style="margin-top:10px;max-width:38ch">Gérez mieux. Vendez mieux. Gagnez mieux.</p>'+(LEGAL.publisher.email?'<p class="sm" style="margin-top:10px">Contact : '+esc(LEGAL.publisher.email)+'</p>':'')+'</div>'+
+ '<div><b>Navigation</b><br><button class="lk" data-act="scroll" data-to="fonctionnalites">Fonctionnalités</button><br><button class="lk" data-act="scroll" data-to="avantages">Avantages</button><br><a href="#connexion">Connexion</a></div>'+
+ '<div><b>Informations</b><br><a href="#guide">Guide d\'utilisation</a><br><a href="#confidentialite">Politique de confidentialité</a><br><a href="#conditions">Conditions d\'utilisation</a><br><a href="#cookies">Politique de cookies</a><br><a href="#mentions-legales">Mentions légales</a></div></div>'+
+ '<div class="wrap muted sm" style="margin-top:20px">© '+new Date().getFullYear()+' COMPTA+. Tous droits réservés.</div></footer>';}
+function authShell(title,sub,body){return '<main class="auth gut" id="contenu" tabindex="-1"><div class="card"><a class="logo" href="#" style="margin-bottom:14px" aria-label="COMPTA+, retour à l\'accueil"><i aria-hidden="true">C+</i>COMPTA+</a><h1>'+title+'</h1><p class="muted" style="margin:6px 0 18px">'+sub+'</p>'+body+'</div></main>';}
+function pageLogin(){return authShell('Connexion','Retrouvez votre boutique.','<form class="fg" data-form="login" novalidate>'+field('E-mail','email','',{id:'l-email',type:'email',req:1,ac:'username',inputmode:'email',extra:'autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="next"'})+pwField('l-pw','password','Mot de passe','current-password')+'<a class="fgot" href="#mot-de-passe-oublie">Mot de passe oublié ?</a><div class="ferr" role="alert" hidden></div><button class="btn btn-p btn-block" type="submit">Se connecter</button></form>'+
+ '<p class="sm" style="margin-top:14px">Pas encore de compte ? <a href="#inscription">Créer un compte</a></p><hr style="border:0;border-top:1px solid var(--line);margin:16px 0"><button class="btn btn-s btn-block" data-act="demo">Essayer avec des données de démonstration</button>');}
+function pageSignup(){return authShell('Créer un compte','Votre boutique est prête en une minute. Nous ne demandons que le nécessaire.','<form class="fg" data-form="signup" novalidate>'+field('Nom complet','name','',{id:'s-name',req:1,ac:'name'})+field('E-mail','email','',{id:'s-email',type:'email',req:1,ac:'username',inputmode:'email',extra:'autocapitalize="none" autocorrect="off" spellcheck="false"'})+pwField('s-pw','password','Mot de passe','new-password','6 caractères minimum')+field('Nom de la boutique','shop','',{id:'s-shop',req:1})+
+ '<label class="chk" for="s-accept"><input type="checkbox" id="s-accept" name="accept" required><span>J\'ai lu et j\'accepte les <a href="#conditions" data-act="legal-modal" data-k="conditions">conditions d\'utilisation</a> et la <a href="#confidentialite" data-act="legal-modal" data-k="confidentialite">politique de confidentialité</a>.</span></label>'+
+ '<div class="ferr" role="alert" hidden></div><button class="btn btn-p btn-block" type="submit">Créer mon compte</button></form><p class="sm" style="margin-top:14px">Déjà inscrit ? <a href="#connexion">Se connecter</a></p>');}
+function pageForgot(){return authShell('Mot de passe oublié','Voici ce qu\'il faut savoir.','<p>Dans cette version, les comptes sont enregistrés uniquement sur cet appareil. Il n\'y a pas de serveur, donc aucun e-mail de récupération ne peut être envoyé.</p><p style="margin-top:10px">Si vous avez une sauvegarde de vos données (Paramètres &gt; Sécurité et données), créez un nouveau compte puis restaurez-la.</p><a class="btn btn-s btn-block" style="margin-top:16px" href="#connexion">Retour à la connexion</a>');}
+/* ---- Coque de l'application ---- */
+const NAV=[['tableau-de-bord','Tableau de bord','dash'],['ventes','Ventes','receipt'],['nouvelle-vente','Nouvelle vente','cart'],['produits','Produits / Stock','box'],['clients','Clients','users'],['credits','Crédits / Dettes','wallet'],['depenses','Dépenses','minus'],['rapports','Rapports','chart'],['parametres','Paramètres','sliders']];
+function route(){return (location.hash||'').replace(/^#/,'');}
+function stockAlertCount(){const g=globalStats(S);return g.low+g.rupt;}
+function shell(r,inner){
+ const bad=stockAlertCount();
+ const side='<aside class="side"><a class="logo" href="#tableau-de-bord"><i>C+</i>COMPTA+</a><nav aria-label="Menu principal">'+NAV.map(function(n){return '<a href="#'+n[0]+'" class="'+(r===n[0]?'on':'')+'"'+(r===n[0]?' aria-current="page"':'')+'>'+ic(n[2])+'<span>'+n[1]+'</span>'+(n[0]==='produits'&&bad?'<span class="nvbadge">'+bad+'</span>':'')+'</a>';}).join('')+'</nav>'+
+ '<div class="me"><div><b>'+esc(USER.name)+'</b><span class="sm">'+esc(S.business.name)+'</span></div><a class="sm" href="#guide" style="color:#C9D4E5">Guide d\'utilisation</a><a class="sm" href="#confidentialite" style="color:#C9D4E5">Confidentialité et conditions</a><button data-act="logout">'+ic('logout')+'Déconnexion</button></div></aside>';
+ const top='<header class="top gut"><a class="logo" href="#tableau-de-bord"><i>C+</i>'+esc(S.business.name)+'</a><span class="sm" style="color:#B8C4D6">'+esc(USER.name)+'</span></header>';
+ const bn='<nav class="bn" aria-label="Navigation mobile"><a href="#tableau-de-bord" class="'+(r==='tableau-de-bord'?'on':'')+'">'+ic('dash')+'Accueil</a><a href="#produits" class="'+(r==='produits'?'on':'')+'">'+ic('box')+'Stock'+(bad?' ('+bad+')':'')+'</a><a href="#nouvelle-vente" class="sell"><span class="c">'+ic('plus')+'</span>Vendre</a><a href="#credits" class="'+(r==='credits'?'on':'')+'">'+ic('wallet')+'Crédits</a><button data-act="more">'+ic('more')+'Plus</button></nav>';
+ return (USER.demo?'<div class="demo">Mode démonstration : ces données sont fictives et séparées de vos vraies données.</div>':'')+(store.ok?'':'<div class="demo">Le stockage du navigateur est indisponible : vos données seront perdues à la fermeture de la page.</div>')+
+ '<div class="shell">'+side+top+'<main class="main gut" id="contenu" tabindex="-1"><div class="content" id="page">'+inner+'</div></main>'+bn+'</div>';}
+function moreSheet(){return showModal(mhead('Menu')+'<div class="stack" style="gap:8px">'+[['ventes','Ventes','receipt'],['clients','Clients','users'],['depenses','Dépenses','minus'],['rapports','Rapports','chart'],['parametres','Paramètres','sliders'],['guide','Guide d\'utilisation','info'],['confidentialite','Confidentialité et conditions','shield']].map(function(n){return '<a class="btn btn-s" style="justify-content:flex-start" href="#'+n[0]+'" data-act="modal-close">'+ic(n[2])+n[1]+'</a>';}).join('')+'<button class="btn btn-s" style="justify-content:flex-start" data-act="logout">'+ic('logout')+'Déconnexion</button></div>');}
+function periodBar(){
+ const p=curPeriod();const ks=[['today',"Aujourd'hui"],['week','Cette semaine'],['month','Ce mois'],['year','Cette année'],['custom','Personnalisée']];
+ return '<div class="pb"><div class="chips" role="group" aria-label="Période">'+ks.map(function(k){return '<button class="chip'+(ui.period===k[0]?' on':'')+'" data-act="period" data-k="'+k[0]+'">'+k[1]+'</button>';}).join('')+'</div>'+
+ (ui.period==='custom'?'<div class="pcustom"><label>Du <input class="in" type="date" id="pfrom" value="'+esc(p.from)+'" data-change="pfrom"></label><label>au <input class="in" type="date" id="pto" value="'+esc(p.to)+'" data-change="pto"></label></div>':'')+
+ '<p class="muted sm">'+esc(p.label)+' · '+fmtDay(p.from)+(p.from!==p.to?' au '+fmtDay(p.to):'')+'</p></div>';}
+/* ---- Graphiques ---- */
+function niceMax(v){if(v<=0)return 1000;const p=Math.pow(10,Math.floor(Math.log10(v))),m=v/p;return (m<=1?1:m<=2?2:m<=4?4:m<=8?8:10)*p;}
+let CHID=0;
+function chartBars(labels,series,label){
+ const id=++CHID,W=520,H=230,pl=48,pr=8,pt=10,pb=26,iw=W-pl-pr,ih=H-pt-pb;
+ const max=niceMax(Math.max.apply(null,[1].concat.apply([],series.map(function(s){return s.values;}))));
+ const n=labels.length,gw=iw/n,bw=Math.max(3,Math.min(26,gw*0.72/series.length)),step=Math.ceil(n/7);let g='';
+ for(let i=0;i<=4;i++){const y=pt+ih-ih*i/4;g+='<line class="gl" x1="'+pl+'" x2="'+(W-pr)+'" y1="'+y+'" y2="'+y+'"/><text class="ax" x="'+(pl-6)+'" y="'+(y+4)+'" text-anchor="end">'+fmtShort(max*i/4)+'</text>';}
+ labels.forEach(function(lb,i){const cx=pl+gw*i+gw/2;
+  series.forEach(function(s,j){const v=s.values[i];if(v>0){const h=ih*v/max;g+='<rect '+(s.hatch?'style="fill:url(#hp'+id+');stroke:var(--c2);stroke-width:1"':'class="b1"')+' x="'+(cx-bw*series.length/2+j*bw).toFixed(1)+'" y="'+(pt+ih-h).toFixed(1)+'" width="'+(bw-1)+'" height="'+h.toFixed(1)+'" rx="2"/>';}});
+  if(i%step===0)g+='<text class="ax" x="'+cx.toFixed(1)+'" y="'+(H-6)+'" text-anchor="middle">'+esc(lb)+'</text>';});
+ const parts=[];labels.forEach(function(lb,i){const vs=series.map(function(s){return s.values[i];});if(vs.some(function(v){return v>0;}))parts.push(lb+' : '+vs.map(function(v){return fmt(v);}).join(' et '));});
+ const desc=parts.length?(label+'. '+parts.slice(-12).join(' ; ')+'.'):(label+'. Aucune donnée sur cette période.');
+ return '<svg class="ch" viewBox="0 0 '+W+' '+H+'" role="img" aria-labelledby="ct'+id+' cd'+id+'"><title id="ct'+id+'">'+esc(label)+'</title><desc id="cd'+id+'">'+esc(desc)+'</desc><defs><pattern id="hp'+id+'" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" style="fill:var(--card)"/><rect width="3" height="6" style="fill:var(--c2)"/></pattern></defs>'+g+'</svg>';}
+function chartSeries(from,to){
+ let a=from;if(from===to)a=addDays(to,-6);const days=diffDays(a,to)+1;const keys=[];let lab,of;
+ if(days<=62){for(let i=0;i<days;i++)keys.push(addDays(a,i));lab=function(k){return k.slice(8)+'/'+k.slice(5,7);};of=function(k){return k;};}
+ else{let p=a.split('-').map(Number);const q=to.split('-').map(Number);let y=p[0],m=p[1];while(y<q[0]||(y===q[0]&&m<=q[1])){keys.push(y+'-'+pad(m));m++;if(m>12){m=1;y++;}}lab=function(k){return MONTHS[Number(k.slice(5))-1];};of=function(k){return k.slice(0,7);};}
+ const idx={};keys.forEach(function(k,i){idx[k]=i;});const sales=keys.map(function(){return 0;}),exps=keys.map(function(){return 0;});
+ S.sales.forEach(function(s){const d=dayKey(s.date);if(inRange(d,a,to)){const i=idx[of(d)];if(i!==undefined)sales[i]+=s.total;}});
+ S.expenses.forEach(function(e){if(inRange(e.date,a,to)){const i=idx[of(e.date)];if(i!==undefined)exps[i]+=e.amount;}});
+ return{labels:keys.map(lab),sales:sales,exps:exps,single:from===to};}
+function hbars(items,unit){
+ if(!items.length)return '<p class="muted sm">Aucune donnée sur cette période.</p>';const max=Math.max.apply(null,items.map(function(i){return i.value;}))||1;
+ return '<div class="hb">'+items.map(function(i){return '<div class="it"><div class="t"><span>'+esc(i.label)+'</span><b class="num">'+(unit==='fcfa'?fmt(i.value):i.value+(i.suffix||''))+'</b></div><div class="bar"><i style="width:'+Math.max(2,i.value/max*100)+'%"></i></div></div>';}).join('')+'</div>';}
+function topList(o,key,n){return Object.keys(o).map(function(k){return {label:o[k].name||k,value:o[k][key]};}).sort(function(a,b){return b.value-a.value;}).slice(0,n);}
+/* ---- Alertes & activité ---- */
+function alertsList(){
+ const out=[];const t=todayKey();
+ S.products.forEach(function(p){const st=stockStatus(p);if(st==='rupture')out.push({c:'err',t:p.name+' : rupture de stock',to:'produits'});else if(st==='faible')out.push({c:'warn',t:p.name+' : stock faible ('+p.qty+' restant'+(p.qty>1?'s':'')+')',to:'produits'});});
+ S.credits.forEach(function(c){if(c.balance>0&&c.due&&c.due<t)out.push({c:'err',t:custName(c.customerId)+' : crédit en retard, reste '+fmt(c.balance)+' (échéance '+fmtDay(c.due)+')',to:'credits'});});
+ return out;}
+function activity(){
+ const a=[];
+ S.sales.forEach(function(s){a.push({d:s.date,t:'Vente '+s.number+' · '+custName(s.customerId),v:fmt(s.total)});});
+ S.expenses.forEach(function(e){a.push({d:e.createdAt||e.date,t:'Dépense · '+e.description,v:'−'+fmt(e.amount).replace('−','')});});
+ S.payments.filter(function(p){return !p.initial;}).forEach(function(p){a.push({d:p.date,t:'Paiement reçu · '+custName(p.customerId),v:fmt(p.amount)});});
+ S.credits.forEach(function(c){a.push({d:c.createdAt,t:'Crédit accordé · '+custName(c.customerId),v:'reste '+fmt(c.initial-c.paid)});});
+ return a.sort(function(x,y){return x.d<y.d?1:-1;}).slice(0,8);}
+/* ---- Tableau de bord ---- */
+function pageDashboard(){
+ const p=curPeriod(),st=computeStats(S,p.from,p.to),g=globalStats(S),al=alertsList(),sr=chartSeries(p.from,p.to);
+ const hasData=S.sales.length||S.expenses.length;
+ const kp=function(l,v,sub,cls){return '<div class="card kpi"><span class="lbl">'+l+'</span><b class="val '+(cls||'')+'">'+v+'</b><span class="sub">'+sub+'</span></div>';};
+ const k2=function(l,v){return '<div class="card kpi sm2"><span class="lbl">'+l+'</span><b class="val">'+v+'</b></div>';};
+ const cats=Object.keys(st.byCat).map(function(k){return {label:k,value:st.byCat[k]};}).sort(function(a,b){return b.value-a.value;});
+ const acts=activity();
+ return '<div class="head"><div><h1>Tableau de bord</h1><p class="muted">'+esc(S.business.name)+'</p></div><div class="acts"><a class="btn btn-p" href="#nouvelle-vente">'+ic('plus')+'Nouvelle vente</a></div></div>'+periodBar()+
+ '<div class="stack"><div class="grid g3">'+kp("Chiffre d'affaires",fmt(st.ca),st.nb+' vente'+(st.nb>1?'s':''))+kp('Dépenses',fmt(st.depenses),st.exps.length+' dépense'+(st.exps.length>1?'s':''))+kp('Bénéfice estimé',fmt(st.benefice),'Marge brute '+fmt(st.marge)+' − dépenses',st.benefice<0?'neg':(st.benefice>0?'pos':''))+'</div>'+
+ '<div class="grid g4">'+k2('Nombre de ventes',st.nb)+k2('Produits',g.products)+k2('Valeur du stock',fmt(g.stockValue))+k2('Stock faible / rupture',g.low+' / '+g.rupt)+k2('Clients',g.customers)+k2('Clients débiteurs',g.debtors)+k2('Crédits restants',fmt(g.creditsLeft))+'</div>'+
+ (al.length?'<div class="card"><h3 style="margin-bottom:10px">Alertes</h3><div class="stack" style="gap:8px">'+al.slice(0,8).map(function(a){return '<a class="alert '+a.c+'" href="#'+a.to+'" style="text-decoration:none">'+ic('alert')+'<span>'+esc(a.t)+'</span></a>';}).join('')+(al.length>8?'<p class="muted sm">et '+(al.length-8)+' autre(s) alerte(s)</p>':'')+'</div></div>':'')+
+ (!hasData?emptyState('Aucune vente enregistrée','Vos ventes apparaîtront ici après votre première transaction.','<a class="btn btn-p" href="#nouvelle-vente">Enregistrer une vente</a>'):'')+
+ '<div class="grid g2"><div class="card"><h3>Évolution des ventes</h3><p class="muted sm" style="margin-bottom:8px">'+(sr.single?'7 derniers jours':'Chiffre d\'affaires')+'</p>'+chartBars(sr.labels,[{values:sr.sales}],'Évolution des ventes')+'</div>'+
+ '<div class="card"><h3>Recettes et dépenses</h3><p class="muted sm" style="margin-bottom:8px">'+(sr.single?'7 derniers jours':'Par période')+'</p>'+chartBars(sr.labels,[{values:sr.sales},{values:sr.exps,hatch:true}],'Recettes et dépenses')+'<div class="lg"><span><i style="background:var(--c1)"></i>Recettes (plein)</span><span><span class="hatch"></span>Dépenses (hachuré)</span></div></div>'+
+ '<div class="card"><h3 style="margin-bottom:12px">Ventes par catégorie</h3>'+hbars(cats,'fcfa')+'</div><div class="card"><h3 style="margin-bottom:12px">Produits les plus vendus</h3>'+hbars(topList(st.byProd,'qty',6).map(function(i){i.suffix=' vendu(s)';return i;}))+'</div></div>'+
+ '<div class="card"><h3 style="margin-bottom:6px">Activité récente</h3>'+(acts.length?acts.map(function(a){return '<div class="act"><span>'+esc(a.t)+'<br><span class="muted sm">'+fmtDT(a.d)+'</span></span><b class="num">'+esc(a.v)+'</b></div>';}).join(''):'<p class="muted sm">Aucune activité pour le moment.</p>')+'</div></div>';}
+/* ---- Nouvelle vente ---- */
+function cartTotal(){return ui.cart.reduce(function(a,l){return a+(Number(l.qty)||0)*(Number(l.price)||0);},0);}
+function cartCount(){return ui.cart.reduce(function(a,l){return a+(Number(l.qty)||0);},0);}
+function posList(){
+ const q=(ui.q.pos||'').toLowerCase().trim(),cat=ui.pos.cat;
+ const list=S.products.filter(function(p){return (!cat||p.categoryId===cat)&&(!q||(p.name+' '+p.ref+' '+catName(p.categoryId)).toLowerCase().indexOf(q)>=0);});
+ if(!S.products.length)return emptyState('Aucun produit','Ajoutez d\'abord vos produits pour pouvoir vendre.','<a class="btn btn-p" href="#produits">Ajouter un produit</a>');
+ if(!list.length)return '<p class="muted">Aucun produit ne correspond à votre recherche.</p>';
+ return '<div class="plist">'+list.map(function(p){return '<button class="ptile" data-act="pos-add" data-id="'+p.id+'"'+(p.qty<=0?' disabled':'')+'><b>'+esc(p.name)+'</b><span class="num">'+fmt(p.sellPrice)+'</span><span class="sm '+(p.qty<=0?'neg':(p.qty<=p.threshold?'':'muted'))+'">'+(p.qty<=0?'Rupture de stock':'Stock : '+p.qty)+'</span></button>';}).join('')+'</div>';}
+function cartHTML(){
+ const total=cartTotal(),isCredit=ui.pos.method==='Crédit',paid=Number(String(ui.pos.paid).replace(/\s/g,''))||0,mobile=ui.pos.method==='MTN MoMo'||ui.pos.method==='Moov Money';
+ const lines=ui.cart.map(function(l,i){const p=findP(S,l.productId);return '<div class="line"><div class="l1"><span>'+esc(p?p.name:'?')+'</span><span class="num">'+fmt((Number(l.qty)||0)*(Number(l.price)||0))+'</span></div><div class="l2"><div class="step"><button type="button" data-act="pos-dec" data-i="'+i+'" aria-label="Diminuer la quantité">'+ic('minus')+'</button><input id="cq'+i+'" inputmode="numeric" value="'+esc(l.qty)+'" data-change="cartqty" data-i="'+i+'" aria-label="Quantité"><button type="button" data-act="pos-inc" data-i="'+i+'" aria-label="Augmenter la quantité">'+ic('plus')+'</button></div>'+
+  '<input class="in" id="cp'+i+'" inputmode="numeric" value="'+esc(l.price)+'" data-change="cartprice" data-i="'+i+'" aria-label="Prix unitaire en FCFA"><span class="muted sm">FCFA</span><button type="button" class="btn btn-sm btn-s" data-act="pos-rm" data-i="'+i+'">Retirer</button></div></div>';}).join('');
+ return '<div class="head" style="margin-bottom:8px"><h2>Panier ('+cartCount()+')</h2><div class="acts">'+(ui.cart.length?'<button class="btn btn-sm btn-s" data-act="pos-clear">Vider</button>':'')+'<button class="xb cx" data-act="pos-close" aria-label="Fermer le panier">'+ic('x')+'</button></div></div>'+
+ (ui.cart.length?lines:'<p class="muted" style="padding:16px 0">Touchez un produit pour l\'ajouter au panier.</p>')+
+ '<div class="fg" style="margin-top:12px"><label class="f">Client<span style="display:flex;gap:8px"><select class="in" id="pos-cust" data-pos="customerId"><option value="">Sans client</option>'+S.customers.map(function(c){return '<option value="'+c.id+'"'+(ui.pos.customerId===c.id?' selected':'')+'>'+esc(c.name)+'</option>';}).join('')+'</select><button type="button" class="btn btn-s" data-act="pos-newcust">'+ic('plus')+'Nouveau</button></span></label>'+
+ '<div><div class="muted sm" style="font-weight:600;margin-bottom:6px">Mode de paiement</div><div class="chips" role="group" aria-label="Mode de paiement">'+METHODS.concat(['Crédit']).map(function(m){return '<button type="button" class="chip'+(ui.pos.method===m?' on':'')+'" data-act="pos-method" data-m="'+m+'">'+m+'</button>';}).join('')+'</div></div>'+
+ (isCredit?'<div class="row2"><label class="f">Acompte payé (FCFA)<input class="in" id="pos-paid" inputmode="numeric" value="'+esc(ui.pos.paid)+'" data-pos="paid" placeholder="0"></label><label class="f">Échéance<input class="in" id="pos-due" type="date" value="'+esc(ui.pos.due||addDays(todayKey(),S.prefs.defaultDueDays||7))+'" data-pos="due"></label></div><label class="f">Mode de l\'acompte<select class="in" id="pos-pm" data-pos="payMethod">'+METHODS.map(function(m){return '<option'+(ui.pos.payMethod===m?' selected':'')+'>'+m+'</option>';}).join('')+'</select></label>':'')+
+ (mobile||(isCredit&&(ui.pos.payMethod==='MTN MoMo'||ui.pos.payMethod==='Moov Money'))?'<label class="f">Référence de la transaction <span class="h">facultatif, non vérifiée automatiquement</span><input class="in" id="pos-ref" value="'+esc(ui.pos.ref)+'" data-pos="ref"></label>':'')+'</div>'+
+ '<div class="tot"><div><span>Total</span><span class="big num" id="pos-total">'+fmt(total)+'</span></div>'+(isCredit?'<div><span>Déjà payé</span><span class="num" id="pos-paidv">'+fmt(paid)+'</span></div><div><span>Reste à payer</span><b class="num" id="pos-rest">'+fmt(Math.max(0,total-paid))+'</b></div>':'')+'</div>'+
+ '<div class="ferr" id="pos-err" hidden></div><button class="btn btn-p btn-block" data-act="pos-validate" style="margin-top:8px"'+(ui.cart.length?'':' disabled')+'>'+ic('check')+'Valider la vente</button>';}
+function posBar(){return ui.cart.length?'<div class="posbar" id="posbar"><button class="btn btn-p" data-act="pos-cart"><span>Voir le panier ('+cartCount()+')</span><span class="num">'+fmt(cartTotal())+'</span></button></div>':'<div id="posbar"></div>';}
+function pagePos(){
+ return '<div class="head"><h1>Nouvelle vente</h1></div><div class="posgrid"><div class="stack"><div class="searchbar"><input class="in" id="possearch" type="search" placeholder="Rechercher un produit, une référence, une catégorie" value="'+esc(ui.q.pos||'')+'" data-q="pos" aria-label="Rechercher un produit">'+
+ '<select class="in" id="poscat" data-pos="cat" aria-label="Catégorie"><option value="">Toutes les catégories</option>'+S.categories.map(function(c){return '<option value="'+c.id+'"'+(ui.pos.cat===c.id?' selected':'')+'>'+esc(c.name)+'</option>';}).join('')+'</select></div><div id="list">'+posList()+'</div></div>'+
+ '<aside class="cart'+(ui.cartOpen?' open':'')+'" id="cartbox" aria-label="Panier">'+cartHTML()+'</aside></div>'+posBar();}
+function refreshCart(){const b=$('#cartbox');if(b)b.innerHTML=cartHTML();const bar=$('#posbar');if(bar)bar.outerHTML=posBar();}
+/* ---- Reçu ---- */
+function receiptHTML(s){
+ const rows=s.items.map(function(l){return '<div class="rl"><span>'+esc(l.name)+' × '+l.qty+' à '+fmt(l.unitPrice)+'</span><b class="num">'+fmt(l.subtotal)+'</b></div>';}).join('');
+ return '<div class="receipt"><div style="text-align:center"><a class="logo" style="justify-content:center"><i>C+</i>COMPTA+</a><div><b>'+esc(S.business.name)+'</b></div><div class="muted sm">'+esc(S.business.phone||'')+'</div></div>'+
+ '<div class="rl"><span>Vente n° '+esc(s.number)+'</span><span>'+fmtDT(s.date)+'</span></div><div class="rl"><span>Client</span><span>'+esc(custName(s.customerId))+'</span></div><hr style="border:0;border-top:1px dashed var(--line);width:100%">'+rows+
+ '<hr style="border:0;border-top:1px dashed var(--line);width:100%"><div class="rl"><b>Total</b><b class="num">'+fmt(s.total)+'</b></div><div class="rl"><span>Montant payé</span><span class="num">'+fmt(s.paid)+'</span></div><div class="rl"><span>Reste à payer</span><b class="num">'+fmt(s.balance)+'</b></div><div class="rl"><span>Mode de paiement</span><span>'+esc(s.method)+'</span></div><p class="muted sm" style="text-align:center">Merci pour votre confiance.</p></div>';}
+function receiptText(s){
+ const L=[S.business.name,'Vente n° '+s.number+' · '+fmtDT(s.date),'Client : '+custName(s.customerId),''];
+ s.items.forEach(function(l){L.push(l.name+' × '+l.qty+' à '+fmt(l.unitPrice)+' = '+fmt(l.subtotal));});
+ L.push('','Total : '+fmt(s.total),'Payé : '+fmt(s.paid),'Reste : '+fmt(s.balance),'Paiement : '+s.method,'','Merci pour votre confiance.');return L.join('\n');}
+function showReceipt(id){const s=S.sales.find(function(x){return x.id===id;});if(!s)return;
+ showModal(mhead('Reçu')+receiptHTML(s)+'<p class="muted sm" style="margin-top:10px">L\'impression directe n\'est pas disponible dans cette page. Copiez le reçu et collez-le dans WhatsApp ou un autre message.</p><div class="head" style="margin:14px 0 0"><span></span><div class="acts"><button class="btn btn-s" data-act="copy-receipt" data-id="'+s.id+'">Copier le reçu</button><button class="btn btn-p" data-act="modal-close">Terminé</button></div></div>');}
+function copyText(t,okMsg){
+ const done=function(){toast(okMsg||'Copié.','ok');};
+ const fb=function(){showModal(mhead('Copier le texte')+'<p class="muted sm" style="margin-bottom:8px">Sélectionnez le texte ci-dessous puis copiez-le.</p><textarea class="in mono" id="cpy" rows="10" readonly>'+esc(t)+'</textarea><div class="head" style="margin:14px 0 0"><span></span><button class="btn btn-p" data-act="modal-close">Fermer</button></div>');const a=$('#cpy');if(a){a.focus();a.select();}};
+ try{navigator.clipboard.writeText(t).then(done,fb);}catch(e){fb();}}
+/* ---- Produits / Stock ---- */
+function productForm(p){p=p||{};
+ return '<form class="fg" data-form="product" data-id="'+(p.id||'')+'">'+field('Nom du produit','name',p.name,{id:'p-name',req:1})+'<div class="row2">'+field('Référence','ref',p.ref,{id:'p-ref',hint:'facultatif'})+sel('Catégorie','categoryId',[['','Sans catégorie']].concat(S.categories.map(function(c){return [c.id,c.name];})),p.categoryId||'','p-cat')+'</div>'+
+ '<div class="row2">'+field("Prix d'achat (FCFA)",'buy',p.buyPrice,{id:'p-buy',inputmode:'numeric',req:1})+field('Prix de vente (FCFA)','sell',p.sellPrice,{id:'p-sell',inputmode:'numeric',req:1})+'</div>'+
+ '<div class="row2">'+(p.id?'':field('Quantité en stock','qty','',{id:'p-qty',inputmode:'numeric',ph:'0'}))+field("Seuil d'alerte",'threshold',p.threshold==null?S.prefs.defaultThreshold:p.threshold,{id:'p-thr',inputmode:'numeric'})+'</div>'+
+ '<label class="f">Description <span class="h">facultatif</span><textarea class="in" id="p-desc" name="description">'+esc(p.description||'')+'</textarea></label><div class="ferr" hidden></div><div class="head" style="margin:0"><span></span><div class="acts"><button type="button" class="btn btn-s" data-act="modal-close">Annuler</button><button class="btn btn-p" type="submit">Enregistrer</button></div></div></form>';}
+function pageProducts(){
+ const tab=ui.tab.produits;
+ const tabs='<div class="tabs" role="tablist">'+[['liste','Produits'],['mouvements','Historique du stock'],['categories','Catégories']].map(function(t){return '<button class="tab'+(tab===t[0]?' on':'')+'" role="tab" data-act="tab" data-page="produits" data-k="'+t[0]+'">'+t[1]+'</button>';}).join('')+'</div>';
+ let body='';
+ if(tab==='liste'){
+  const q=(ui.q.prod||'').toLowerCase().trim(),fc=ui.fl.prodCat||'',fs=ui.fl.prodSt||'',so=ui.fl.prodSort||'name';
+  let list=S.products.filter(function(p){return (!fc||p.categoryId===fc)&&(!fs||stockStatus(p)===fs)&&(!q||(p.name+' '+p.ref).toLowerCase().indexOf(q)>=0);});
+  list.sort(function(a,b){return so==='qty'?a.qty-b.qty:so==='sell'?b.sellPrice-a.sellPrice:a.name.localeCompare(b.name,'fr');});
+  const rows=list.map(function(p){const st=stockStatus(p);return ['<b>'+esc(p.name)+'</b>'+(p.ref?'<br><span class="muted sm">'+esc(p.ref)+'</span>':''),esc(catName(p.categoryId)),'<span class="num">'+fmt(p.buyPrice)+'</span>','<span class="num">'+fmt(p.sellPrice)+'</span>','<b class="num">'+p.qty+'</b>','<span class="num">'+p.threshold+'</span>',st==='rupture'?badge('Rupture','err'):st==='faible'?badge('Stock faible','warn'):badge('Disponible','ok'),
+   '<button class="btn btn-s btn-sm" data-act="stock-move" data-id="'+p.id+'">Stock</button><button class="btn btn-s btn-sm" data-act="prod-edit" data-id="'+p.id+'">Modifier</button><button class="btn btn-s btn-sm" data-act="prod-del" data-id="'+p.id+'">Supprimer</button>'];});
+  body='<div class="searchbar"><input class="in" id="psearch" type="search" placeholder="Rechercher un produit" value="'+esc(ui.q.prod||'')+'" data-q="prod" aria-label="Rechercher un produit"><select class="in" id="pf-cat" data-fl="prodCat" aria-label="Catégorie"><option value="">Toutes les catégories</option>'+S.categories.map(function(c){return '<option value="'+c.id+'"'+(fc===c.id?' selected':'')+'>'+esc(c.name)+'</option>';}).join('')+'</select>'+
+  '<select class="in" id="pf-st" data-fl="prodSt" aria-label="Statut"><option value="">Tous les statuts</option><option value="ok"'+(fs==='ok'?' selected':'')+'>Disponible</option><option value="faible"'+(fs==='faible'?' selected':'')+'>Stock faible</option><option value="rupture"'+(fs==='rupture'?' selected':'')+'>Rupture</option></select>'+
+  '<select class="in" id="pf-so" data-fl="prodSort" aria-label="Trier"><option value="name">Trier par nom</option><option value="qty"'+(so==='qty'?' selected':'')+'>Stock le plus bas</option><option value="sell"'+(so==='sell'?' selected':'')+'>Prix de vente décroissant</option></select></div><div id="list">'+prodListHTML(rows)+'</div>';
+ }else if(tab==='mouvements'){
+  const mv=S.movements.slice().sort(function(a,b){return a.date<b.date?1:-1;}).slice(0,200);
+  body=tbl([{h:'Date'},{h:'Produit'},{h:'Type'},{h:'Quantité',cls:'r'},{h:'Motif'}],mv.map(function(m){const p=findP(S,m.productId);return [fmtDT(m.date),esc(p?p.name:'Produit supprimé'),badge(m.type,m.qty<0?'warn':'info'),'<b class="num '+(m.qty<0?'neg':'pos')+'">'+(m.qty>0?'+':'')+m.qty+'</b>',esc(m.motif||'-')];}),emptyState('Aucun mouvement de stock','Les entrées, sorties et ventes apparaîtront ici.'));
+ }else{
+  body='<div class="card"><form class="searchbar" data-form="category" style="margin:0 0 12px"><input class="in" id="newcat" name="name" placeholder="Nouvelle catégorie" aria-label="Nom de la catégorie"><button class="btn btn-p" type="submit">'+ic('plus')+'Ajouter</button></form><div class="ferr" hidden style="margin-bottom:10px"></div>'+
+  (S.categories.length?S.categories.map(function(c){const n=S.products.filter(function(p){return p.categoryId===c.id;}).length;return '<div class="act" style="align-items:center"><span><b>'+esc(c.name)+'</b> <span class="muted sm">· '+n+' produit'+(n>1?'s':'')+'</span></span><span><button class="btn btn-s btn-sm" data-act="cat-edit" data-id="'+c.id+'">Renommer</button> <button class="btn btn-s btn-sm" data-act="cat-del" data-id="'+c.id+'">Supprimer</button></span></div>';}).join(''):'<p class="muted">Aucune catégorie. Créez-en une pour classer vos produits.</p>')+'</div>';}
+ return '<div class="head"><h1>Produits / Stock</h1><div class="acts"><button class="btn btn-p" data-act="prod-new">'+ic('plus')+'Ajouter un produit</button></div></div>'+tabs+body;}
+function prodListHTML(rows){
+ if(!S.products.length)return emptyState('Aucun produit','Ajoutez votre premier produit pour commencer à gérer votre stock.','<button class="btn btn-p" data-act="prod-new">Ajouter un produit</button>');
+ return tbl([{h:'Nom'},{h:'Catégorie'},{h:"Prix d'achat",cls:'r'},{h:'Prix de vente',cls:'r'},{h:'Quantité',cls:'r'},{h:'Seuil',cls:'r'},{h:'Statut'},{h:'',cls:'acts'}],rows,'<p class="muted">Aucun produit ne correspond à ces filtres.</p>');}
+/* ---- Clients ---- */
+function pageCustomers(){
+ const q=(ui.q.cust||'').toLowerCase().trim(),debt=debtByCustomer(S);
+ const list=S.customers.filter(function(c){return !q||(c.name+' '+c.phone).toLowerCase().indexOf(q)>=0;});
+ const rows=list.map(function(c){const n=S.sales.filter(function(s){return s.customerId===c.id;}).length;const d=debt[c.id]||0;return ['<b>'+esc(c.name)+'</b>',esc(c.phone||'-'),'<span class="num">'+n+'</span>','<b class="num '+(d>0?'neg':'')+'">'+fmt(d)+'</b>','<button class="btn btn-s btn-sm" data-act="cust-view" data-id="'+c.id+'">'+ic('eye')+'Fiche</button><button class="btn btn-s btn-sm" data-act="cust-edit" data-id="'+c.id+'">Modifier</button><button class="btn btn-s btn-sm" data-act="cust-del" data-id="'+c.id+'">Supprimer</button>'];});
+ return '<div class="head"><h1>Clients</h1><div class="acts"><button class="btn btn-p" data-act="cust-new">'+ic('plus')+'Ajouter un client</button></div></div><div class="searchbar"><input class="in" id="csearch" type="search" placeholder="Rechercher un client" value="'+esc(ui.q.cust||'')+'" data-q="cust" aria-label="Rechercher un client"></div><div id="list">'+custListHTML(rows)+'</div>';}
+function custListHTML(rows){if(!S.customers.length)return emptyState('Aucun client','Ajoutez vos clients pour suivre leurs achats et leurs crédits.','<button class="btn btn-p" data-act="cust-new">Ajouter un client</button>');
+ return tbl([{h:'Nom'},{h:'Téléphone'},{h:'Ventes',cls:'r'},{h:'Dette restante',cls:'r'},{h:'',cls:'acts'}],rows,'<p class="muted">Aucun client ne correspond à votre recherche.</p>');}
+function customerForm(c){c=c||{};return '<form class="fg" data-form="customer" data-id="'+(c.id||'')+'">'+field('Nom','name',c.name,{id:'c-name',req:1,ac:'off'})+'<div class="row2">'+field('Téléphone','phone',c.phone,{id:'c-phone',type:'tel'})+field('Adresse','address',c.address,{id:'c-addr'})+'</div><label class="f">Notes<textarea class="in" id="c-notes" name="notes">'+esc(c.notes||'')+'</textarea></label><div class="ferr" hidden></div><div class="head" style="margin:0"><span></span><div class="acts"><button type="button" class="btn btn-s" data-act="modal-close">Annuler</button><button class="btn btn-p" type="submit">Enregistrer</button></div></div></form>';}
+function customerCard(id){
+ const c=S.customers.find(function(x){return x.id===id;});if(!c)return;
+ const sales=S.sales.filter(function(s){return s.customerId===id;}).sort(function(a,b){return a.date<b.date?1:-1;});
+ const pays=S.payments.filter(function(p){return p.customerId===id;}).sort(function(a,b){return a.date<b.date?1:-1;});
+ const tot=sales.reduce(function(a,s){return a+s.total;},0),paid=sales.reduce(function(a,s){return a+s.paid;},0),left=sales.reduce(function(a,s){return a+s.balance;},0);
+ showModal(mhead(c.name)+'<p class="muted sm">'+esc(c.phone||'Pas de téléphone')+(c.address?' · '+esc(c.address):'')+'</p>'+(c.notes?'<p class="sm" style="margin-top:6px">'+esc(c.notes)+'</p>':'')+
+ '<div class="grid g4" style="margin:14px 0"><div class="kpi sm2"><span class="lbl">Total des achats</span><b class="val">'+fmt(tot)+'</b></div><div class="kpi sm2"><span class="lbl">Total payé</span><b class="val">'+fmt(paid)+'</b></div><div class="kpi sm2"><span class="lbl">Dette restante</span><b class="val '+(left>0?'neg':'')+'">'+fmt(left)+'</b></div><div class="kpi sm2"><span class="lbl">Ventes</span><b class="val">'+sales.length+'</b></div></div>'+
+ '<h3 style="margin-bottom:8px">Achats</h3>'+(sales.length?tbl([{h:'N°'},{h:'Date'},{h:'Total',cls:'r'},{h:'Reste',cls:'r'}],sales.map(function(s){return [esc(s.number),fmtDay(dayKey(s.date)),'<span class="num">'+fmt(s.total)+'</span>','<span class="num">'+fmt(s.balance)+'</span>'];})):'<p class="muted sm">Aucun achat.</p>')+
+ '<h3 style="margin:16px 0 8px">Paiements</h3>'+(pays.length?tbl([{h:'Date'},{h:'Mode'},{h:'Montant',cls:'r'}],pays.map(function(p){return [fmtDay(dayKey(p.date)),esc(p.method)+(p.initial?' (initial)':''),'<span class="num">'+fmt(p.amount)+'</span>'];})):'<p class="muted sm">Aucun paiement.</p>'),true);}
+/* ---- Crédits ---- */
+function pageCredits(){
+ const t=todayKey(),f=ui.fl.credSt||'',q=(ui.q.cred||'').toLowerCase().trim();
+ const list=S.credits.map(function(c){return {c:c,st:creditStatus(c,t),s:S.sales.find(function(x){return x.id===c.saleId;})};}).filter(function(x){return (!f||x.st===f)&&(!q||custName(x.c.customerId).toLowerCase().indexOf(q)>=0);}).sort(function(a,b){return a.c.createdAt<b.c.createdAt?1:-1;});
+ const open=S.credits.filter(function(c){return c.balance>0;});
+ const late=open.filter(function(c){return c.due&&c.due<t;});
+ const cls={'Payé':'ok','Impayé':'err','Partiellement payé':'warn','En retard':'err'};
+ const rows=list.map(function(x){const c=x.c;return [esc(custName(c.customerId)),esc(x.s?x.s.number:'-'),'<span class="num">'+fmt(c.initial)+'</span>','<span class="num">'+fmt(c.paid)+'</span>','<b class="num">'+fmt(c.balance)+'</b>',fmtDay(dayKey(c.createdAt)),c.due?fmtDay(c.due):'-',badge(x.st,cls[x.st]),
+  (c.balance>0?'<button class="btn btn-p btn-sm" data-act="cred-pay" data-id="'+c.id+'">Encaisser</button>':'')+'<button class="btn btn-s btn-sm" data-act="cred-hist" data-id="'+c.id+'">Historique</button>'];});
+ return '<div class="head"><h1>Crédits / Dettes</h1></div><div class="grid g3" style="margin-bottom:16px"><div class="card kpi"><span class="lbl">Total restant dû</span><b class="val">'+fmt(open.reduce(function(a,c){return a+c.balance;},0))+'</b></div><div class="card kpi"><span class="lbl">Crédits ouverts</span><b class="val">'+open.length+'</b></div><div class="card kpi"><span class="lbl">En retard</span><b class="val '+(late.length?'neg':'')+'">'+late.length+'</b></div></div>'+
+ '<div class="searchbar"><input class="in" id="crsearch" type="search" placeholder="Rechercher un client" value="'+esc(ui.q.cred||'')+'" data-q="cred" aria-label="Rechercher un client"><select class="in" id="cr-st" data-fl="credSt" aria-label="Statut"><option value="">Tous les statuts</option>'+['Impayé','Partiellement payé','En retard','Payé'].map(function(s){return '<option'+(f===s?' selected':'')+'>'+s+'</option>';}).join('')+'</select></div><div id="list">'+credListHTML(rows)+'</div>';}
+function credListHTML(rows){if(!S.credits.length)return emptyState('Aucun crédit','Les ventes à crédit apparaîtront ici avec leur reste à payer.','<a class="btn btn-p" href="#nouvelle-vente">Enregistrer une vente</a>');
+ return tbl([{h:'Client'},{h:'Vente'},{h:'Montant initial',cls:'r'},{h:'Payé',cls:'r'},{h:'Reste',cls:'r'},{h:'Date'},{h:'Échéance'},{h:'Statut'},{h:'',cls:'acts'}],rows,'<p class="muted">Aucun crédit ne correspond à ces filtres.</p>');}
+function payForm(c){return '<form class="fg" data-form="pay" data-id="'+c.id+'"><p>'+esc(custName(c.customerId))+' doit encore <b>'+fmt(c.balance)+'</b>.</p>'+field('Montant reçu (FCFA)','amount','',{id:'pay-amt',inputmode:'numeric',req:1})+sel('Mode de paiement','method',METHODS,'Espèces','pay-m')+field('Référence de transaction','reference','',{id:'pay-ref',hint:'facultatif, non vérifiée automatiquement'})+'<div class="ferr" hidden></div><div class="head" style="margin:0"><span></span><div class="acts"><button type="button" class="btn btn-s" data-act="modal-close">Annuler</button><button class="btn btn-p" type="submit">Enregistrer le paiement</button></div></div></form>';}
+/* ---- Historique des ventes ---- */
+function pageSales(){
+ const p=curPeriod(),q=(ui.q.sale||'').toLowerCase().trim(),f=ui.fl.saleSt||'';
+ const list=S.sales.filter(function(s){return inRange(dayKey(s.date),p.from,p.to)&&(!f||saleStatus(s)===f)&&(!q||(s.number+' '+custName(s.customerId)).toLowerCase().indexOf(q)>=0);}).sort(function(a,b){return a.date<b.date?1:-1;});
+ const cls={'Payée':'ok','Partielle':'warn','Impayée':'err'};
+ const rows=list.map(function(s){return [esc(s.number),fmtDT(s.date),esc(custName(s.customerId)),'<b class="num">'+fmt(s.total)+'</b>',esc(s.method),badge(saleStatus(s),cls[saleStatus(s)]),'<button class="btn btn-s btn-sm" data-act="sale-view" data-id="'+s.id+'">Détail</button>'];});
+ return '<div class="head"><h1>Ventes</h1><div class="acts"><a class="btn btn-p" href="#nouvelle-vente">'+ic('plus')+'Nouvelle vente</a></div></div>'+periodBar()+
+ '<div class="searchbar"><input class="in" id="ssearch" type="search" placeholder="Rechercher par numéro ou client" value="'+esc(ui.q.sale||'')+'" data-q="sale" aria-label="Rechercher une vente"><select class="in" id="s-st" data-fl="saleSt" aria-label="Statut"><option value="">Tous les statuts</option>'+['Payée','Partielle','Impayée'].map(function(s){return '<option'+(f===s?' selected':'')+'>'+s+'</option>';}).join('')+'</select></div><div id="list">'+saleListHTML(rows)+'</div>';}
+function saleListHTML(rows){if(!S.sales.length)return emptyState('Aucune vente enregistrée','Vos ventes apparaîtront ici après votre première transaction.','<a class="btn btn-p" href="#nouvelle-vente">Enregistrer une vente</a>');
+ return tbl([{h:'N°'},{h:'Date'},{h:'Client'},{h:'Montant',cls:'r'},{h:'Paiement'},{h:'Statut'},{h:'',cls:'acts'}],rows,'<p class="muted">Aucune vente ne correspond à ces filtres.</p>');}
+/* ---- Dépenses ---- */
+function expenseForm(e){e=e||{};return '<form class="fg" data-form="expense" data-id="'+(e.id||'')+'">'+field('Description','description',e.description,{id:'e-desc',req:1})+'<div class="row2">'+field('Montant (FCFA)','amount',e.amount,{id:'e-amt',inputmode:'numeric',req:1})+field('Date','date',e.date||todayKey(),{id:'e-date',type:'date',req:1})+'</div><div class="row2">'+sel('Catégorie','category',EXP_CATS,e.category||'Transport','e-cat')+sel('Moyen de paiement','method',METHODS,e.method||'Espèces','e-m')+'</div><label class="f">Note <span class="h">facultatif</span><textarea class="in" id="e-note" name="note">'+esc(e.note||'')+'</textarea></label><div class="ferr" hidden></div><div class="head" style="margin:0"><span></span><div class="acts"><button type="button" class="btn btn-s" data-act="modal-close">Annuler</button><button class="btn btn-p" type="submit">Enregistrer</button></div></div></form>';}
+function pageExpenses(){
+ const p=curPeriod(),q=(ui.q.exp||'').toLowerCase().trim(),f=ui.fl.expCat||'';
+ const list=S.expenses.filter(function(e){return inRange(e.date,p.from,p.to)&&(!f||e.category===f)&&(!q||(e.description+' '+e.note).toLowerCase().indexOf(q)>=0);}).sort(function(a,b){return a.date<b.date?1:-1;});
+ const total=list.reduce(function(a,e){return a+e.amount;},0);
+ const rows=list.map(function(e){return [fmtDay(e.date),'<b>'+esc(e.description)+'</b>'+(e.note?'<br><span class="muted sm">'+esc(e.note)+'</span>':''),badge(e.category,'info'),esc(e.method),'<b class="num">'+fmt(e.amount)+'</b>','<button class="btn btn-s btn-sm" data-act="exp-edit" data-id="'+e.id+'">Modifier</button><button class="btn btn-s btn-sm" data-act="exp-del" data-id="'+e.id+'">Supprimer</button>'];});
+ return '<div class="head"><h1>Dépenses</h1><div class="acts"><button class="btn btn-p" data-act="exp-new">'+ic('plus')+'Ajouter une dépense</button></div></div>'+periodBar()+
+ '<div class="card kpi" style="margin-bottom:16px"><span class="lbl">Total des dépenses sur la période</span><b class="val">'+fmt(total)+'</b></div>'+
+ '<div class="searchbar"><input class="in" id="esearch" type="search" placeholder="Rechercher une dépense" value="'+esc(ui.q.exp||'')+'" data-q="exp" aria-label="Rechercher une dépense"><select class="in" id="e-f" data-fl="expCat" aria-label="Catégorie"><option value="">Toutes les catégories</option>'+EXP_CATS.map(function(c){return '<option'+(f===c?' selected':'')+'>'+c+'</option>';}).join('')+'</select></div><div id="list">'+expListHTML(rows)+'</div>';}
+function expListHTML(rows){if(!S.expenses.length)return emptyState('Aucune dépense enregistrée','Notez vos dépenses (transport, loyer, électricité…) pour connaître votre vrai bénéfice.','<button class="btn btn-p" data-act="exp-new">Ajouter une dépense</button>');
+ return tbl([{h:'Date'},{h:'Description'},{h:'Catégorie'},{h:'Paiement'},{h:'Montant',cls:'r'},{h:'',cls:'acts'}],rows,'<p class="muted">Aucune dépense ne correspond à ces filtres.</p>');}
+/* ---- Rapports ---- */
+function csvRows(kind,p){
+ if(kind==='ventes'){const r=[['Numéro','Date','Client','Total FCFA','Payé FCFA','Reste FCFA','Mode','Statut']];S.sales.filter(function(s){return inRange(dayKey(s.date),p.from,p.to);}).forEach(function(s){r.push([s.number,dayKey(s.date),custName(s.customerId),s.total,s.paid,s.balance,s.method,saleStatus(s)]);});return r;}
+ if(kind==='depenses'){const r=[['Date','Description','Catégorie','Moyen','Montant FCFA']];S.expenses.filter(function(e){return inRange(e.date,p.from,p.to);}).forEach(function(e){r.push([e.date,e.description,e.category,e.method,e.amount]);});return r;}
+ const st=computeStats(S,p.from,p.to);return [['Indicateur','FCFA'],["Chiffre d'affaires",st.ca],['Coût des marchandises vendues',st.cogs],['Marge brute',st.marge],['Dépenses',st.depenses],['Bénéfice estimé',st.benefice]];}
+function pageReports(){
+ const p=curPeriod(),st=computeStats(S,p.from,p.to),tab=ui.tab.rapports;
+ const tabs='<div class="tabs" role="tablist">'+[['ventes','Ventes'],['depenses','Dépenses'],['benefice','Bénéfice']].map(function(t){return '<button class="tab'+(tab===t[0]?' on':'')+'" role="tab" data-act="tab" data-page="rapports" data-k="'+t[0]+'">'+t[1]+'</button>';}).join('')+'</div>';
+ const kp=function(l,v,c){return '<div class="card kpi sm2"><span class="lbl">'+l+'</span><b class="val '+(c||'')+'">'+v+'</b></div>';};
+ let body='';
+ if(tab==='ventes'){
+  const prods=Object.keys(st.byProd).map(function(k){return st.byProd[k];}).sort(function(a,b){return b.qty-a.qty;});
+  body='<div class="grid g4">'+kp('Nombre de ventes',st.nb)+kp("Chiffre d'affaires",fmt(st.ca))+kp('Montant encaissé',fmt(st.encaisse))+kp('Montant à recevoir',fmt(st.recevoir))+'</div><div class="card" style="margin-top:12px"><h3 style="margin-bottom:10px">Produits vendus</h3>'+(prods.length?tbl([{h:'Produit'},{h:'Quantité',cls:'r'},{h:"Chiffre d'affaires",cls:'r'}],prods.map(function(x){return [esc(x.name),'<b class="num">'+x.qty+'</b>','<span class="num">'+fmt(x.ca)+'</span>'];})):'<p class="muted sm">Aucune vente sur cette période.</p>')+'</div>';
+ }else if(tab==='depenses'){
+  const cats=Object.keys(st.expByCat).map(function(k){return {label:k,value:st.expByCat[k]};}).sort(function(a,b){return b.value-a.value;});const sr=chartSeries(p.from,p.to);
+  body='<div class="grid g4">'+kp('Total des dépenses',fmt(st.depenses))+kp('Nombre de dépenses',st.exps.length)+'</div><div class="grid g2" style="margin-top:12px"><div class="card"><h3 style="margin-bottom:12px">Par catégorie</h3>'+hbars(cats,'fcfa')+'</div><div class="card"><h3 style="margin-bottom:8px">Évolution</h3>'+chartBars(sr.labels,[{values:sr.exps,hatch:true}],'Évolution des dépenses')+'</div></div>';
+ }else{
+  const line=function(l,v,b,c){return '<div class="act" style="'+(b?'font-weight:700;font-size:1.05rem':'')+'"><span>'+l+'</span><span class="num '+(c||'')+'">'+fmt(v)+'</span></div>';};
+  body='<div class="card" style="max-width:560px">'+line("Chiffre d'affaires",st.ca)+line('− Coût des marchandises vendues',st.cogs)+line('= Marge brute',st.marge,1)+line('− Dépenses d\'exploitation',st.depenses)+line('= Bénéfice estimé',st.benefice,1,st.benefice<0?'neg':'pos')+'<p class="muted sm" style="margin-top:12px">Le bénéfice est calculé sur les ventes, y compris celles à crédit pas encore payées, avec le prix d\'achat connu au moment de chaque vente.</p></div>';}
+ return '<div class="head"><h1>Rapports</h1><div class="acts"><button class="btn btn-s" data-act="export-csv" data-k="'+tab+'">Exporter en CSV</button></div></div>'+periodBar()+tabs+body;}
+/* ---- Paramètres ---- */
+function pageSettings(){
+ const tab=ui.tab.parametres,b=S.business;
+ const tabs='<div class="tabs" role="tablist">'+[['boutique','Boutique'],['compte','Compte'],['preferences','Préférences'],['securite','Sécurité et données']].map(function(t){return '<button class="tab'+(tab===t[0]?' on':'')+'" role="tab" data-act="tab" data-page="parametres" data-k="'+t[0]+'">'+t[1]+'</button>';}).join('')+'</div>';
+ let body='';
+ if(tab==='boutique')body='<form class="card fg" style="max-width:560px" data-form="shop">'+field('Nom de la boutique','name',b.name,{id:'b-name',req:1})+'<div class="row2">'+field('Téléphone','phone',b.phone,{id:'b-phone',type:'tel'})+field('Devise','currency','FCFA / XOF',{id:'b-cur',dis:1})+'</div>'+field('Adresse','address',b.address,{id:'b-addr'})+'<div class="ferr" hidden></div><button class="btn btn-p" type="submit">Enregistrer</button></form>';
+ else if(tab==='compte')body='<div class="stack" style="max-width:560px"><form class="card fg" data-form="account">'+field('Nom complet','name',USER.name,{id:'a-name',req:1})+field('E-mail','email',USER.email,{id:'a-email',type:'email',dis:1})+'<div class="ferr" hidden></div><button class="btn btn-p" type="submit">Enregistrer</button></form>'+
+  (USER.demo?'':'<form class="card fg" data-form="password"><h3>Changer le mot de passe</h3>'+field('Mot de passe actuel','old','',{id:'pw-old',type:'password',req:1,ac:'current-password'})+field('Nouveau mot de passe','new','',{id:'pw-new',type:'password',req:1,ac:'new-password',hint:'6 caractères minimum'})+'<div class="ferr" hidden></div><button class="btn btn-p" type="submit">Changer le mot de passe</button></form>')+'</div>';
+ else if(tab==='preferences')body='<form class="card fg" style="max-width:560px" data-form="prefs">'+field("Seuil d'alerte par défaut (nouveaux produits)",'thr',S.prefs.defaultThreshold,{id:'pf-thr',inputmode:'numeric'})+field('Délai de paiement par défaut pour un crédit (jours)','due',S.prefs.defaultDueDays,{id:'pf-due',inputmode:'numeric'})+'<label style="display:flex;gap:10px;align-items:center;font-weight:600"><input type="checkbox" id="pf-toasts" name="toasts"'+(S.prefs.toasts!==false?' checked':'')+' style="width:20px;height:20px"> Afficher les messages de confirmation</label><div class="ferr" hidden></div><button class="btn btn-p" type="submit">Enregistrer</button></form>';
+ else body='<div class="stack" style="max-width:640px"><div class="card"><h3>Où sont mes données ?</h3><p class="muted" style="margin-top:6px">Cette version enregistre tout dans le navigateur de cet appareil. Il n\'y a pas de serveur : vos données ne sont pas partagées entre appareils et sont perdues si vous videz les données du navigateur. Faites des sauvegardes régulières.</p></div>'+
+  '<div class="card"><h3>Sauvegarde</h3><p class="muted" style="margin:6px 0 12px">Copiez vos données pour les conserver, puis collez-les ici pour les restaurer sur cet appareil ou un autre.</p><div class="acts chips"><button class="btn btn-s" data-act="backup">Copier la sauvegarde</button><button class="btn btn-s" data-act="restore">Restaurer une sauvegarde</button></div></div>'+
+  '<div class="card"><h3>Vérifier les calculs</h3><p class="muted" style="margin:6px 0 12px">Rejoue le scénario de test sur des données temporaires. Vos données ne sont pas touchées.</p><button class="btn btn-s" data-act="run-test">Lancer le test</button><div id="testout" style="margin-top:12px"></div></div>'+
+  '<div class="card"><h3>Guide et documents légaux</h3><div class="legalnav"><a href="#guide">Guide d\'utilisation</a><a href="#confidentialite">Confidentialité</a><a href="#conditions">Conditions</a><a href="#cookies">Cookies</a><a href="#mentions-legales">Mentions légales</a></div></div>'+
+  '<div class="card"><h3>Session</h3><button class="btn btn-s" style="margin-top:10px" data-act="logout">'+ic('logout')+'Se déconnecter</button></div>'+
+  (USER.demo?'':'<div class="card"><h3>Supprimer mon compte et mes données</h3><p class="muted" style="margin:6px 0 12px">Efface définitivement ce compte et toutes les données de la boutique de cet appareil. Pensez à copier une sauvegarde avant.</p><button class="btn btn-d" data-act="del-account">'+ic('trash')+'Supprimer mon compte</button></div>')+'</div>';
+ return '<div class="head"><h1>Paramètres</h1></div>'+tabs+body;}
+/* ---- Pages légales : confidentialité, conditions, cookies, mentions légales ---- */
+/* L'éditeur renseigne ses informations ICI (une seule fois). Les champs vides s'affichent en jaune « À compléter ». */
+const LEGAL={
+ version:'1.1',updated:'26 novembre 2026',
+ publisher:{name:'ONYX TECH',address:'',email:'guihoneteka@gmail.com',phone:'+229 01 90 73 38 38',director:'ONYX TECH'}
+};
+const LEGAL_ROUTES=['guide','confidentialite','conditions','cookies','mentions-legales'];
+const LEGAL_TITLES={'guide':'Guide d\'utilisation','confidentialite':'Politique de confidentialité','conditions':'Conditions d\'utilisation','cookies':'Politique de cookies et de stockage local','mentions-legales':'Mentions légales'};
+function pv(k,label){const v=LEGAL.publisher[k];return v?esc(v):'<span class="todo">À compléter : '+esc(label)+'</span>';}
+function contactLine(){const e=LEGAL.publisher.email;return e?esc(e):'<span class="todo">À compléter : e-mail de contact</span>';}
+function legalNav(cur){return '<nav class="legalnav" aria-label="Guide et documents légaux">'+LEGAL_ROUTES.map(function(k){return '<a href="#'+k+'"'+(k===cur?' aria-current="page"':'')+'>'+LEGAL_TITLES[k].replace(' et de stockage local','')+'</a>';}).join('')+'</nav>';}
+function legalPage(k){
+ const body={'guide':legalGuide,'confidentialite':legalPrivacy,'conditions':legalTerms,'cookies':legalCookies,'mentions-legales':legalMentions}[k]();
+ return '<header class="ph gut"><div class="wrap"><a class="logo" href="#"><i aria-hidden="true">C+</i>COMPTA+</a><div class="ra">'+(USER?'<a class="btn btn-p btn-sm" href="#tableau-de-bord">Retour à l\'application</a>':'<a class="btn btn-s btn-sm" href="#connexion">Connexion</a><a class="btn btn-p btn-sm" href="#inscription">Créer un compte</a>')+'</div></div></header>'+
+ '<main id="contenu" tabindex="-1" class="gut" style="padding-block:24px 48px"><article class="wrap legal"><h1>'+esc(LEGAL_TITLES[k])+'</h1><p class="meta">'+(k==='guide'?'':'Version '+LEGAL.version+' · ')+'Dernière mise à jour : '+LEGAL.updated+'</p>'+legalNav(k)+body+'</article></main>'+
+ '<footer class="foot gut"><div class="wrap muted sm">© '+new Date().getFullYear()+' COMPTA+. Tous droits réservés.</div></footer>';}
+function legalGuide(){
+ const st=function(t,items){return '<h2>'+t+'</h2>'+items;};
+ return '<div class="note"><b>En bref.</b> COMPTA+ sert à suivre votre stock, vos ventes, vos crédits clients et vos dépenses, et à connaître votre bénéfice. Les montants sont en FCFA. Regardez la vidéo (1 min 52, avec voix), ou lisez les étapes ci-dessous.</div>'+
+ '<h2>Vidéo du guide</h2><video class="vid" controls preload="none" playsinline poster="guide-poster.jpg" aria-label="Guide vidéo : comment utiliser COMPTA+, en 11 étapes" aria-describedby="vtxt"><source src="guide.mp4" type="video/mp4"><p>Votre navigateur ne peut pas lire cette vidéo. Les étapes sont écrites ci-dessous.</p></video>'+
+ '<p class="muted sm" id="vtxt">Vidéo d\'environ 4 Mo, avec voix off et sous-titres en français. Les noms et les chiffres montrés sont des exemples. Elle ne se charge que si vous appuyez sur lecture. <a href="guide.mp4" target="_blank" rel="noopener">Ouvrir la vidéo dans un nouvel onglet</a>.</p>'+
+ '<h2>Le guide en texte</h2><p>Ces étapes suivent l\'ordre de la vidéo. Pour essayer sans rien risquer, utilisez le bouton « Essayer la démonstration » sur la page d\'accueil.</p>'+
+ '<h3>1. Créer votre compte</h3><ol><li>Sur la page d\'accueil, touchez « Commencer gratuitement ».</li><li>Saisissez votre nom, votre e-mail, un mot de passe (6 caractères minimum) et le nom de votre boutique.</li><li>Cochez la case pour accepter les conditions d\'utilisation et la politique de confidentialité, puis touchez « Créer mon compte ».</li></ol><p>Le tableau de bord est vide au départ : il se remplit avec vos ventes.</p>'+
+ '<h3>2. Ajouter vos produits</h3><ol><li>Ouvrez « Stock » (ou « Produits / Stock » sur ordinateur), puis « Ajouter un produit ».</li><li>Renseignez le nom, le prix d\'achat, le prix de vente et la quantité en stock. Le seuil d\'alerte vous prévient quand il reste peu d\'un produit.</li><li>Touchez « Enregistrer ». Le stock diminue à chaque vente. Pour le corriger après un réapprovisionnement ou une perte, utilisez le bouton « Stock » du produit.</li></ol>'+
+ '<h3>3. Enregistrer vos clients</h3><ol><li>Ouvrez « Clients », puis « Ajouter un client ».</li><li>Seul le nom est obligatoire. Le téléphone, l\'adresse et les notes sont facultatifs.</li><li>La fiche du client montre ses achats et ce qu\'il vous doit.</li></ol>'+
+ '<h3>4. Faire une vente</h3><ol><li>Touchez « Vendre » (bouton + au centre du menu du bas).</li><li>Touchez chaque produit pour l\'ajouter. Touchez-le encore pour augmenter la quantité.</li><li>Ouvrez le panier avec « Voir le panier ». Vous pouvez changer la quantité et le prix.</li><li>Choisissez le mode de paiement : espèces, MTN MoMo, Moov Money, autre, ou crédit.</li><li>Touchez « Valider la vente ». Le reçu s\'affiche, et le stock est mis à jour. Le bouton « Copier le reçu » permet de le coller dans WhatsApp.</li></ol><p>Pour MTN MoMo et Moov Money, la référence de transaction est facultative. COMPTA+ ne la vérifie pas et ne déclenche aucun paiement : elle sert seulement à garder une trace.</p>'+
+ '<h3>5. Faire une vente à crédit</h3><ol><li>Préparez le panier comme pour une vente.</li><li>Choisissez le client (ou touchez « Nouveau » pour l\'ajouter).</li><li>Touchez « Crédit », puis notez l\'acompte payé et la date d\'échéance.</li><li>Validez. Le reste à payer est enregistré au nom du client.</li></ol>'+
+ '<h3>6. Encaisser un paiement</h3><ol><li>Ouvrez « Crédits ». Vous voyez le total qui vous est dû et les crédits en retard.</li><li>Sur la ligne du client, touchez « Encaisser ».</li><li>Saisissez le montant reçu et le mode de paiement, puis « Enregistrer le paiement ». Le solde diminue automatiquement. « Historique » affiche les paiements déjà reçus.</li></ol>'+
+ '<h3>7. Noter vos dépenses</h3><ol><li>Ouvrez « Dépenses » (menu « Plus » sur téléphone), puis « Ajouter une dépense ».</li><li>Indiquez la description, le montant, la date et la catégorie (transport, loyer, électricité...).</li></ol><p>Les dépenses sont retirées de votre bénéfice.</p>'+
+ '<h3>8. Lire le tableau de bord</h3><p>Il résume, pour la période choisie (aujourd\'hui, cette semaine, ce mois, cette année ou personnalisée) : le chiffre d\'affaires, les dépenses, le bénéfice estimé, la valeur du stock et les alertes de stock faible ou de crédit en retard. Le bénéfice estimé est la marge sur les produits vendus, moins les dépenses.</p>'+
+ '<h3>9. Consulter les rapports</h3><p>Ouvrez « Rapports ». Les onglets Ventes, Dépenses et Bénéfice détaillent la période choisie. « Exporter en CSV » vous donne le texte à copier dans un tableur.</p>'+
+ '<h3>10. Sauvegarder vos données</h3><p>Vos données sont enregistrées sur votre appareil seulement. Si vous videz les données du navigateur ou changez de téléphone, elles disparaissent. Pour les garder :</p><ol><li>Ouvrez « Paramètres », puis l\'onglet « Sécurité et données ».</li><li>Touchez « Copier la sauvegarde » et collez le texte dans un endroit sûr (une note, un message à vous-même).</li><li>Pour restaurer, touchez « Restaurer une sauvegarde » et collez le texte.</li></ol><p>Faites-le régulièrement, par exemple chaque fin de semaine.</p>'+
+ '<h2>Questions fréquentes</h2><h3>J\'ai oublié mon mot de passe. Que faire ?</h3><p>Dans cette version, il n\'y a pas de serveur : COMPTA+ ne peut pas vous envoyer de lien de réinitialisation. Sans le mot de passe, il n\'est pas possible de rouvrir le compte. C\'est une raison de plus de faire des sauvegardes.</p>'+
+ '<h3>Puis-je utiliser COMPTA+ sur plusieurs appareils ?</h3><p>Pas encore : chaque appareil garde ses propres données. Vous pouvez les transférer avec la sauvegarde.</p>'+
+ '<h3>Comment supprimer mon compte ?</h3><p>Paramètres, onglet « Sécurité et données », puis « Supprimer mon compte ». Cette action efface définitivement vos données sur cet appareil.</p>'+
+ '<h3>Où trouver les règles d\'utilisation et la protection de mes données ?</h3><p>Dans les <a href="#conditions">conditions d\'utilisation</a>, la <a href="#confidentialite">politique de confidentialité</a>, la <a href="#cookies">politique de cookies</a> et les <a href="#mentions-legales">mentions légales</a>.</p>';}
+function legalPrivacy(){
+ const rows=[
+  ['Compte','Nom complet, adresse e-mail, nom de la boutique, empreinte du mot de passe (le mot de passe lui-même n\'est jamais enregistré)','Créer votre compte et vous connecter','Contrat : fournir le service que vous demandez','Tant que le compte existe'],
+  ['Session','Identifiant interne du compte connecté','Vous garder connecté sur cet appareil','Nécessaire au service','Jusqu\'à la déconnexion'],
+  ['Acceptation des conditions','Date et numéro de version des conditions acceptées','Pouvoir prouver votre acceptation','Obligation de preuve du consentement','Tant que le compte existe'],
+  ['Boutique','Téléphone et adresse (facultatifs, ajoutés par vous dans les Paramètres)','Les afficher sur vos reçus','Votre choix (facultatif)','Jusqu\'à modification ou suppression'],
+  ['Activité commerciale','Produits, stock, ventes, paiements, crédits, dépenses','Faire fonctionner l\'application et calculer vos résultats','Contrat','Tant que vous ne les supprimez pas'],
+  ['Vos clients','Nom, téléphone, adresse, notes (tout est facultatif sauf le nom)','Suivre leurs achats et leurs crédits','Votre activité (voir la section « Vos clients »)','Tant que vous ne les supprimez pas']];
+ return '<div class="note"><b>En bref.</b> Dans cette version, toutes vos données restent <b>sur votre appareil</b>, dans le navigateur. L\'éditeur de COMPTA+ ne les reçoit pas et ne les lit pas. COMPTA+ n\'utilise ni publicité, ni outil de mesure d\'audience, ni cookie de suivi.</div>'+
+ '<h2>1. Qui est responsable ?</h2><p>COMPTA+ est édité par '+pv('name','nom ou raison sociale de l\'éditeur')+'. Contact : '+contactLine()+'.</p><p>Dans cette version, l\'éditeur ne reçoit ni ne conserve les données que vous saisissez : elles sont enregistrées uniquement dans le navigateur de votre appareil. Pour les informations sur vos propres clients, c\'est vous qui décidez de les saisir et de les utiliser (voir la section 6).</p>'+
+ '<h2>2. Les données traitées</h2><p>Nous ne demandons que ce qui est nécessaire au fonctionnement du service.</p>'+tbl([{h:'Catégorie'},{h:'Données'},{h:'Pourquoi'},{h:'Base juridique'},{h:'Durée'}],rows.map(function(r){return r.map(esc);}))+
+ '<h2>3. Ce que COMPTA+ ne fait pas</h2><ul><li>Pas de cookie de suivi, pas de publicité, pas de profilage.</li><li>Pas d\'outil de mesure d\'audience ni de service d\'analyse tiers.</li><li>Pas d\'accès à votre position, à votre appareil photo, à votre micro ni à vos contacts.</li><li>Pas de vente ni de partage de vos données.</li><li>Pas de police de caractères chargée depuis un site extérieur : votre appareil ne contacte aucun tiers pour afficher l\'application.</li><li>Pas de traitement de paiement : COMPTA+ note les paiements que vous encaissez, mais ne les exécute ni ne les vérifie.</li></ul>'+
+ '<h2>4. Où sont vos données ?</h2><p>Elles sont enregistrées dans le stockage local de votre navigateur, sur l\'appareil que vous utilisez. Elles ne sont pas partagées entre vos appareils. Si vous videz les données du navigateur ou changez d\'appareil, elles disparaissent. Utilisez la sauvegarde (Paramètres &gt; Sécurité et données).</p>'+
+ '<h2>5. Transferts hors du Bénin</h2><p>L\'application n\'envoie vos données à aucun serveur, ni au Bénin ni à l\'étranger. Elles ne quittent pas votre appareil.</p>'+
+ '<h2>6. Vos clients</h2><p>Si vous enregistrez des informations sur vos clients (nom, téléphone, adresse, notes), vous êtes responsable de cet usage. Bonnes pratiques : n\'enregistrez que le nécessaire, informez vos clients que vous tenez ce fichier, ne saisissez jamais de données sensibles (santé, religion, opinions, etc.) dans les notes, et supprimez les fiches inutiles.</p>'+
+ '<h2>7. Vos droits</h2><p>Vous pouvez à tout moment :</p><ul><li><b>Accéder à vos données</b> : elles sont visibles dans l\'application.</li><li><b>Les recevoir dans un format réutilisable</b> : Paramètres &gt; Sécurité et données &gt; Copier la sauvegarde.</li><li><b>Les corriger</b> : modifiez directement les fiches concernées.</li><li><b>Les effacer</b> : supprimez des éléments un par un, ou tout le compte avec Paramètres &gt; Sécurité et données &gt; Supprimer mon compte et mes données.</li><li><b>Vous opposer ou retirer votre accord</b> : supprimez le compte, ou écrivez à '+contactLine()+'.</li></ul><p>Pour toute question, écrivez à '+contactLine()+'. Nous répondons dans les délais prévus par le Code du numérique du Bénin (au plus 60 jours pour une demande d\'accès, 45 jours pour une demande de rectification ou de suppression).</p>'+
+ '<p>Vous pouvez aussi saisir l\'Autorité de protection des données personnelles (APDP) du Bénin.</p>'+
+ '<h2>8. Sécurité</h2><ul><li>Votre mot de passe n\'est jamais enregistré en clair : seule une empreinte calculée avec PBKDF2 et un sel propre à votre compte est conservée.</li><li>Les données stockées dans le navigateur ne sont pas chiffrées. Toute personne qui a accès à votre appareil déverrouillé pourrait les lire. Verrouillez votre appareil et déconnectez-vous sur un appareil partagé.</li><li>Il n\'existe pas de récupération de mot de passe, car aucun serveur ne conserve vos données. Gardez une sauvegarde.</li><li>Si un incident de sécurité touchant COMPTA+ était constaté, l\'éditeur informerait les utilisateurs concernés et l\'autorité compétente sans délai.</li></ul>'+
+ '<h2>9. Enfants</h2><p>COMPTA+ s\'adresse aux personnes majeures qui exercent une activité commerciale. Il n\'est pas destiné aux mineurs.</p>'+
+ '<h2>10. Évolutions</h2><p>Si COMPTA+ évolue (par exemple comptes enregistrés sur un serveur, synchronisation entre appareils, paiements), cette politique sera mise à jour avant la mise en service, et votre acceptation vous sera de nouveau demandée si les conditions changent sur un point important.</p>'+
+ '<p class="muted sm">Cadre juridique : loi n° 2017-20 du 20 avril 2018 portant Code du numérique en République du Bénin, modifiée par la loi n° 2020-35 du 6 janvier 2021 (Livre V, protection des données à caractère personnel).</p>';}
+function legalTerms(){
+ return '<div class="note"><b>En bref.</b> COMPTA+ est un outil gratuit d\'aide à la gestion. Vos données restent sur votre appareil : pensez à les sauvegarder. Les résultats affichés sont des estimations calculées à partir de ce que vous saisissez.</div>'+
+ '<h2>1. Objet</h2><p>Les présentes conditions encadrent l\'utilisation de l\'application web COMPTA+ (gestion de produits, de stock, de ventes, de clients, de crédits, de dépenses et de rapports), éditée par '+pv('name','nom ou raison sociale de l\'éditeur')+'. Le <a href="#guide">guide d\'utilisation</a> (vidéo et texte) explique son fonctionnement.</p>'+
+ '<h2>2. Acceptation</h2><p>En créant un compte, vous cochez la case d\'acceptation de ces conditions et de la politique de confidentialité. La date et la version acceptées sont enregistrées avec votre compte, pour pouvoir en justifier. Vous pouvez retirer votre accord à tout moment en supprimant votre compte.</p>'+
+ '<h2>3. Accès au service</h2><ul><li>Le service est gratuit et accessible depuis un navigateur.</li><li>Il est réservé aux personnes majeures, ou à toute personne légalement capable de s\'engager, pour un usage lié à une activité commerciale.</li><li>Un mode démonstration, avec des données fictives non enregistrées, est disponible sans compte.</li></ul>'+
+ '<h2>4. Votre compte</h2><ul><li>Vous fournissez des informations exactes et vous gardez votre mot de passe secret.</li><li>Vous êtes responsable de l\'activité réalisée depuis votre compte et votre appareil.</li><li>Il n\'existe pas de récupération de mot de passe dans cette version (voir la politique de confidentialité).</li></ul>'+
+ '<h2>5. Vos données et vos sauvegardes</h2><p>Vos données sont enregistrées sur votre appareil. L\'éditeur ne les possède pas et ne peut pas les restaurer. Vous êtes responsable de leur sauvegarde. Nous vous conseillons de copier une sauvegarde régulièrement (Paramètres &gt; Sécurité et données).</p>'+
+ '<h2>6. Ce que vous vous engagez à faire</h2><ul><li>Saisir des informations exactes et utiliser COMPTA+ pour une activité licite.</li><li>Respecter les personnes dont vous enregistrez les informations (vos clients) : n\'enregistrer que le nécessaire, les informer et ne pas saisir de données sensibles.</li><li>Ne pas tenter de perturber, copier ou détourner le service.</li><li>Ne pas saisir de numéros de carte bancaire, de codes secrets ni de mots de passe de comptes de paiement.</li></ul>'+
+ '<h2>7. Résultats et calculs</h2><p>Le chiffre d\'affaires, la marge brute et le bénéfice estimé sont calculés à partir des ventes, des prix d\'achat et des dépenses que vous saisissez. Une vente à crédit compte dans le chiffre d\'affaires dès la date de vente, même si elle n\'est pas encore payée. Ces résultats sont une aide à la décision : ils ne constituent ni un conseil comptable, fiscal ou juridique, ni une comptabilité légale. Vérifiez-les avant toute décision importante ou déclaration.</p>'+
+ '<h2>8. Paiements mobiles</h2><p>COMPTA+ vous permet de noter le mode de paiement (espèces, MTN MoMo, Moov Money, autre) et une référence de transaction. L\'application n\'effectue aucun paiement et ne vérifie pas automatiquement les transactions.</p>'+
+ '<h2>9. Gratuité et remboursement</h2><p>Le service est gratuit : aucun paiement n\'est demandé, donc aucun remboursement n\'est à prévoir. Si des offres payantes sont proposées plus tard, leurs conditions (prix, moyens de paiement, remboursement, droit de rétractation applicable) vous seront présentées clairement avant tout paiement.</p>'+
+ '<h2>10. Propriété intellectuelle</h2><p>Le nom COMPTA+, son identité visuelle et son code appartiennent à l\'éditeur. Vous conservez tous vos droits sur les données que vous saisissez. L\'éditeur vous accorde un droit personnel, non exclusif et non transférable d\'utiliser l\'application.</p>'+
+ '<h2>11. Disponibilité et évolutions</h2><p>L\'éditeur s\'efforce de maintenir le service accessible, sans garantie d\'accès continu. Des fonctionnalités peuvent être ajoutées, modifiées ou retirées. En cas de changement important des conditions, vous en serez informé dans l\'application.</p>'+
+ '<h2>12. Responsabilité</h2><p>Dans la limite permise par la loi applicable, le service est fourni « en l\'état ». L\'éditeur n\'est pas responsable des pertes de données dues à l\'effacement du navigateur, à la perte de l\'appareil ou à l\'absence de sauvegarde, ni des décisions prises à partir des résultats affichés. Cette clause ne limite pas la responsabilité qui ne peut pas être limitée par la loi.</p>'+
+ '<h2>13. Suspension et fin d\'utilisation</h2><p>Vous pouvez arrêter d\'utiliser COMPTA+ et supprimer votre compte à tout moment. L\'éditeur peut suspendre l\'accès en cas d\'usage contraire à ces conditions ou à la loi.</p>'+
+ '<h2>14. Droit applicable</h2><p>Ces conditions sont soumises au droit de la République du Bénin. En cas de litige, une solution amiable est recherchée en priorité ; à défaut, les juridictions béninoises compétentes sont saisies.</p>'+
+ '<h2>15. Contact</h2><p>'+contactLine()+'</p>';}
+function legalCookies(){
+ const rows=[['cp:users','Liste des comptes de cet appareil (nom, e-mail, nom de boutique, empreinte du mot de passe, version des conditions acceptées)','Strictement nécessaire','Jusqu\'à suppression du compte'],['cp:data:…','Vos données de gestion (produits, ventes, clients, dépenses…)','Strictement nécessaire','Jusqu\'à suppression du compte'],['cp:session','Identifiant du compte resté connecté','Strictement nécessaire','Jusqu\'à la déconnexion']];
+ return '<div class="note"><b>En bref.</b> COMPTA+ n\'utilise <b>aucun cookie</b>. Il enregistre vos données dans le <b>stockage local du navigateur</b>, uniquement pour faire fonctionner le service que vous demandez. Il n\'y a ni publicité, ni mesure d\'audience, ni suivi : aucune bannière de consentement n\'est donc nécessaire.</div>'+
+ '<h2>1. Cookies</h2><p>Un cookie est un petit fichier envoyé par un site à votre navigateur. COMPTA+ ne dépose aucun cookie.</p>'+
+ '<h2>2. Stockage local du navigateur</h2><p>Une technologie voisine, le stockage local, sert à garder vos données sur votre appareil. Voici tout ce que COMPTA+ y enregistre :</p>'+tbl([{h:'Nom'},{h:'Contenu'},{h:'Nature'},{h:'Durée'}],rows.map(function(r){return r.map(esc);}))+
+ '<p>Ces éléments sont indispensables : sans eux, l\'application ne pourrait ni vous connecter ni conserver vos ventes. Ils ne servent jamais à vous suivre, à mesurer votre audience ou à afficher de la publicité, et ils ne sont envoyés à personne.</p>'+
+ '<h2>3. Pourquoi il n\'y a pas de bannière de consentement</h2><p>Un accord préalable est nécessaire pour les traceurs qui ne sont pas indispensables au service (mesure d\'audience, publicité, réseaux sociaux). COMPTA+ n\'en utilise aucun. Le stockage décrit ci-dessus est strictement nécessaire au service que vous avez demandé, et cette page vous en informe de façon claire.</p>'+
+ '<p>Si un outil de suivi était ajouté un jour, un choix « Accepter » ou « Refuser » aussi simple l\'un que l\'autre vous serait proposé avant tout dépôt, et cette page serait mise à jour.</p>'+
+ '<h2>4. Effacer ces éléments</h2><ul><li>Dans l\'application : Paramètres &gt; Sécurité et données &gt; Supprimer mon compte et mes données.</li><li>Dans le navigateur : réglages &gt; confidentialité &gt; effacer les données de navigation du site.</li></ul><p>Attention : l\'effacement supprime définitivement vos données si vous n\'avez pas de sauvegarde.</p>';}
+function legalMentions(){
+ return '<h2>Éditeur de l\'application</h2><ul><li>Nom ou raison sociale : '+pv('name','nom ou raison sociale')+'</li>'+(LEGAL.publisher.address?'<li>Adresse : '+esc(LEGAL.publisher.address)+'</li>':'')+'<li>E-mail : '+pv('email','e-mail')+'</li><li>Téléphone : '+pv('phone','téléphone')+'</li><li>Responsable de la publication : '+pv('director','nom du responsable de la publication')+'</li></ul>'+
+ '<h2>Propriété intellectuelle</h2><p>Le nom COMPTA+, l\'identité visuelle et le code de l\'application appartiennent à l\'éditeur.</p>'+
+ '<h2>Protection des données</h2><p>Voir la <a href="#confidentialite">politique de confidentialité</a> et la <a href="#cookies">politique de cookies</a>.</p>'+
+ '<h2>Droit applicable</h2><p>Droit de la République du Bénin.</p>';}
+/* ---- Rendu & routage ---- */
+const PUB=['','connexion','inscription','mot-de-passe-oublie'];
+function render(){
+ const r=route(),app=$('#app');
+ const SKIP='<button class="skip" data-act="skip">Aller au contenu principal</button>';
+ if(LEGAL_ROUTES.indexOf(r)>=0){document.body.classList.add('pub');app.innerHTML=SKIP+legalPage(r);document.title=LEGAL_TITLES[r].replace(' et de stockage local','')+' | COMPTA+';return;}
+ document.body.classList.toggle('pub',!USER);document.title='COMPTA+';
+ if(!USER){
+  if(r==='connexion')app.innerHTML=pageLogin();else if(r==='inscription')app.innerHTML=pageSignup();else if(r==='mot-de-passe-oublie')app.innerHTML=pageForgot();else app.innerHTML=pageLanding();
+  app.insertAdjacentHTML('afterbegin',SKIP);return;}
+ let k=r;if(PUB.indexOf(r)>=0||!NAV.some(function(n){return n[0]===r;})){k='tableau-de-bord';if(r!==k){history.replaceState(null,'','#'+k);}}
+ const pages={'tableau-de-bord':pageDashboard,'ventes':pageSales,'nouvelle-vente':pagePos,'produits':pageProducts,'clients':pageCustomers,'credits':pageCredits,'depenses':pageExpenses,'rapports':pageReports,'parametres':pageSettings};
+ let inner;try{inner=pages[k]();}catch(e){console.error(e);inner=emptyState('Une erreur est survenue','Cette page n\'a pas pu s\'afficher. Rechargez la page.');}
+ app.innerHTML=SKIP+shell(k,inner);
+ if(k!=='nouvelle-vente')ui.cartOpen=false;
+}
+function rerender(){const a=document.activeElement,id=a&&a.id,pos=window.scrollY;render();if(id){const n=document.getElementById(id);if(n){n.focus();try{if(n.setSelectionRange&&/text|search/.test(n.type)){const l=n.value.length;n.setSelectionRange(l,l);}}catch(e){}}}window.scrollTo(0,pos);}
+function refreshList(){const r=route();let h='';
+ if(r==='produits'&&ui.tab.produits==='liste'){return rerender();}
+ rerender();}
+window.addEventListener('hashchange',function(){closeModal();window.scrollTo(0,0);render();});
+/* ---- Formulaires ---- */
+function formData(f){const o={};Array.prototype.forEach.call(f.elements,function(el){if(el.name)o[el.name]=el.type==='checkbox'?el.checked:el.value;});return o;}
+function showErr(f,m){const e=f.querySelector('.ferr');if(e){e.textContent=m;e.hidden=false;}else toast(m,'err');}
+function enterApp(u,demo){USER=Object.assign({},u,{demo:!!demo});S=demo?(function(){const d=newState('Boutique de démonstration');seedDemo(d);return d;})():loadData(u);
+ if(!demo)store.set('cp:session',u.id);history.replaceState(null,'','#tableau-de-bord');ui.cart=[];render();}
+async function submitForm(f){
+ const kind=f.getAttribute('data-form'),d=formData(f),id=f.getAttribute('data-id')||'';
+ try{
+  if(kind==='login'){const em=d.email.trim().toLowerCase(),u=getUsers().find(function(x){return x.email===em;});
+   if(!u||(await hashPw(d.password,u.salt))!==u.hash)fail('E-mail ou mot de passe incorrect.');enterApp(u);return;}
+  if(kind==='signup'){const em=d.email.trim().toLowerCase();if(!/^\S+@\S+\.\S+$/.test(em))fail('Cette adresse e-mail n\'est pas valide.');
+   if(String(d.password).length<6)fail('Le mot de passe doit contenir au moins 6 caractères.');if(!d.name.trim()||!d.shop.trim())fail('Veuillez remplir tous les champs obligatoires.');if(!d.accept)fail('Pour créer un compte, cochez la case d\'acceptation des conditions d\'utilisation et de la politique de confidentialité.');
+   const us=getUsers();if(us.some(function(x){return x.email===em;}))fail('Un compte existe déjà avec cet e-mail.');
+   const salt=uid(),u={id:uid(),name:d.name.trim(),email:em,shop:d.shop.trim(),salt:salt,hash:await hashPw(d.password,salt),acceptedAt:new Date().toISOString(),termsVersion:LEGAL.version};us.push(u);setUsers(us);
+   const nd=newState(u.shop);store.set('cp:data:'+u.id,JSON.stringify(nd));enterApp(u);toast('Compte créé. Bienvenue sur COMPTA+ !','ok');return;}
+  if(guard('form-'+kind))return;
+  if(kind==='product'){if(id){updateProduct(S,id,d);toast('Produit modifié.','ok');}else{addProduct(S,d);toast('Produit ajouté.','ok');}}
+  else if(kind==='customer'){if(id){updateCustomer(S,id,d);toast('Client modifié.','ok');}else{const c=addCustomer(S,d);if(ui.cb==='posCustomer'){ui.pos.customerId=c.id;ui.cb=null;}toast('Client ajouté.','ok');}}
+  else if(kind==='category'){addCategory(S,d.name);toast('Catégorie ajoutée.','ok');}
+  else if(kind==='pay'){payCredit(S,id,d.amount,d.method,d.reference);toast('Paiement enregistré avec succès.','ok');}
+  else if(kind==='expense'){if(id){updateExpense(S,id,d);toast('Dépense modifiée.','ok');}else{addExpense(S,d);toast('Dépense enregistrée.','ok');}}
+  else if(kind==='stock'){adjustStock(S,id,d.type,d.qty,d.motif);toast('Stock mis à jour.','ok');}
+  else if(kind==='shop'){if(!d.name.trim())fail('Veuillez renseigner : le nom de la boutique.');Object.assign(S.business,{name:d.name.trim(),phone:d.phone.trim(),address:d.address.trim()});toast('Boutique enregistrée.','ok');}
+  else if(kind==='account'){if(!d.name.trim())fail('Veuillez renseigner : votre nom.');USER.name=d.name.trim();if(!USER.demo){const us=getUsers();const u=us.find(function(x){return x.id===USER.id;});if(u){u.name=USER.name;setUsers(us);}}toast('Compte enregistré.','ok');}
+  else if(kind==='password'){const us=getUsers(),u=us.find(function(x){return x.id===USER.id;});if(!u||(await hashPw(d.old,u.salt))!==u.hash)fail('Le mot de passe actuel est incorrect.');if(String(d.new).length<6)fail('Le nouveau mot de passe doit contenir au moins 6 caractères.');u.salt=uid();u.hash=await hashPw(d.new,u.salt);setUsers(us);f.reset();toast('Mot de passe modifié.','ok');return;}
+  else if(kind==='prefs'){S.prefs.defaultThreshold=toInt(d.thr,"Le seuil d'alerte");S.prefs.defaultDueDays=toInt(d.due,'Le délai de paiement');S.prefs.toasts=!!d.toasts;toast('Préférences enregistrées.','ok');}
+  else if(kind==='delacct'){if(USER.demo)fail('Le mode démonstration n\'enregistre rien.');if(String(d.confirm||'').trim().toUpperCase()!=='SUPPRIMER')fail('Tapez SUPPRIMER pour confirmer.');
+   const uid0=USER.id;setUsers(getUsers().filter(function(x){return x.id!==uid0;}));store.del('cp:data:'+uid0);store.del('cp:session');USER=null;S=null;ui.cart=[];closeModal();history.replaceState(null,'','#');render();window.scrollTo(0,0);toast('Votre compte et vos données ont été supprimés de cet appareil.','ok');return;}
+  else if(kind==='restore'){let o;try{o=JSON.parse(d.json);}catch(e){fail('Ce texte n\'est pas une sauvegarde valide.');}if(!o||!Array.isArray(o.products)||!Array.isArray(o.sales)||!o.business)fail('Ce texte n\'est pas une sauvegarde COMPTA+.');S=o;S.prefs=Object.assign({toasts:true,defaultThreshold:5,defaultDueDays:7},S.prefs||{});toast('Sauvegarde restaurée.','ok');}
+  if(!USER.demo)save();closeModal();rerender();
+ }catch(e){ui.last['form-'+kind]=0;if(e instanceof AppError)showErr(f,e.message);else{console.error(e);showErr(f,'Cette opération n\'a pas pu être enregistrée.');}}
+}
+document.addEventListener('submit',function(e){const f=e.target;if(f.getAttribute&&f.getAttribute('data-form')){e.preventDefault();submitForm(f);}});
+/* ---- Saisies ---- */
+document.addEventListener('input',function(e){
+ const t=e.target,q=t.getAttribute('data-q');
+ if(q){ui.q[q]=t.value;if(q==='pos'){$('#list').innerHTML=posList();}else rerender();return;}
+ if(t.id==='pos-paid'){ui.pos.paid=t.value;const tot=cartTotal(),p=Number(String(t.value).replace(/\s/g,''))||0;$('#pos-paidv').textContent=fmt(p);$('#pos-rest').textContent=fmt(Math.max(0,tot-p));}
+});
+document.addEventListener('change',function(e){
+ const t=e.target,ch=t.getAttribute('data-change'),fl=t.getAttribute('data-fl'),ps=t.getAttribute('data-pos');
+ if(ch==='pfrom'||ch==='pto'){ui.custom[ch==='pfrom'?'from':'to']=t.value;rerender();return;}
+ if(fl){ui.fl[fl]=t.value;rerender();return;}
+ if(ps){ui.pos[ps]=t.value;if(ps==='paid'||ps==='ref'||ps==='due')return;if(ps==='cat'){$('#list').innerHTML=posList();}else refreshCart();return;}
+ if(ch==='cartqty'||ch==='cartprice'){const l=ui.cart[Number(t.getAttribute('data-i'))];if(l){if(ch==='cartqty')l.qty=t.value;else l.price=t.value;}refreshCart();}
+});
+/* ---- Actions ---- */
+function stockModal(p){showModal(mhead('Stock : '+p.name)+'<p class="muted" style="margin-bottom:12px">Stock actuel : <b>'+p.qty+'</b></p><form class="fg" data-form="stock" data-id="'+p.id+'">'+sel('Opération','type',[['entrée','Entrée de stock'],['sortie','Sortie de stock'],['ajustement','Ajustement (nouvelle quantité)']],'entrée','st-type')+field('Quantité','qty','',{id:'st-qty',inputmode:'numeric',req:1})+field('Motif','motif','',{id:'st-motif',hint:'facultatif'})+'<div class="ferr" hidden></div><div class="head" style="margin:0"><span></span><div class="acts"><button type="button" class="btn btn-s" data-act="modal-close">Annuler</button><button class="btn btn-p" type="submit">Enregistrer</button></div></div></form>');}
+function doValidateSale(btn){
+ if(guard('sale'))return;const err=$('#pos-err');
+ try{
+  const sale=createSale(S,{items:ui.cart.map(function(l){return {productId:l.productId,qty:l.qty,price:l.price};}),customerId:ui.pos.customerId||null,method:ui.pos.method,paid:ui.pos.paid,payMethod:ui.pos.payMethod,reference:ui.pos.ref,due:ui.pos.due,userId:USER.id});
+  if(!USER.demo)save();
+  ui.cart=[];ui.pos.paid='';ui.pos.ref='';ui.pos.due='';ui.cartOpen=false;rerender();toast('Vente enregistrée avec succès.','ok');showReceipt(sale.id);
+ }catch(e){if(e instanceof AppError){err.textContent=e.message;err.hidden=false;}else{console.error(e);err.textContent='Cette opération n\'a pas pu être enregistrée.';err.hidden=false;}}
+}
+function mutate(fn,msg){try{fn();if(!USER.demo)save();closeModal();rerender();if(msg)toast(msg,'ok');}catch(e){if(e instanceof AppError)toast(e.message,'err');else{console.error(e);toast('Cette opération n\'a pas pu être enregistrée.','err');}}}
+document.addEventListener('click',function(e){
+ const el=e.target.closest('[data-act]');if(!el)return;const a=el.getAttribute('data-act'),id=el.getAttribute('data-id');
+ if(a==='ov'){if(e.target===el)closeModal();return;}
+ if(a==='modal-close'){closeModal();return;}
+ if(a==='scroll'){const t=document.getElementById(el.getAttribute('data-to'));if(t)t.scrollIntoView({block:'start'});return;}
+ if(a==='legal-modal'){e.preventDefault();const k=el.getAttribute('data-k');const fn=k==='conditions'?legalTerms:legalPrivacy;showModal(mhead(LEGAL_TITLES[k])+'<div class="legal">'+fn()+'</div><div class="head" style="margin:14px 0 0"><span></span><button class="btn btn-p" data-act="modal-close">Fermer</button></div>',true);return;}
+ if(a==='pw-toggle'){const inp=document.getElementById(el.getAttribute('data-for'));if(inp){const show=inp.type==='password';inp.type=show?'text':'password';el.textContent=show?'Masquer':'Afficher';el.setAttribute('aria-pressed',show?'true':'false');}return;}
+ if(a==='skip'){const m=$('#contenu');if(m){m.focus();m.scrollIntoView();}return;}
+ if(a==='del-account'){showModal(mhead('Supprimer mon compte')+'<p>Cette action est <b>définitive</b>. Votre compte et toutes les données de votre boutique seront effacés de cet appareil. COMPTA+ ne peut pas les restaurer.</p><form class="fg" data-form="delacct" style="margin-top:14px">'+field('Tapez SUPPRIMER pour confirmer','confirm','',{id:'del-c',req:1,extra:'autocapitalize="characters" autocomplete="off"'})+'<div class="ferr" role="alert" hidden></div><div class="head" style="margin:0"><span></span><div class="acts"><button type="button" class="btn btn-s" data-act="modal-close">Annuler</button><button class="btn btn-d" type="submit">Supprimer définitivement</button></div></div></form>');return;}
+ if(a==='demo'){enterApp({id:'demo',name:'Visiteur',email:'demo@exemple.com'},true);return;}
+ if(a==='logout'){closeModal();if(!USER.demo)save();store.del('cp:session');USER=null;S=null;history.replaceState(null,'','#');render();return;}
+ if(a==='more'){moreSheet();return;}
+ if(a==='confirm-yes'){const cb=ui.cb;ui.cb=null;if(typeof cb==='function')cb();return;}
+ if(a==='period'){ui.period=el.getAttribute('data-k');rerender();return;}
+ if(a==='tab'){ui.tab[el.getAttribute('data-page')]=el.getAttribute('data-k');rerender();return;}
+ /* Vente */
+ if(a==='pos-add'){const p=findP(S,id);if(!p)return;const l=ui.cart.find(function(x){return x.productId===id;});const have=l?Number(l.qty)||0:0;
+  if(have+1>p.qty){toast('Stock insuffisant pour '+p.name+' (disponible : '+p.qty+').','err');return;}
+  if(l)l.qty=have+1;else ui.cart.push({productId:id,qty:1,price:p.sellPrice});refreshCart();return;}
+ if(a==='pos-inc'||a==='pos-dec'){const l=ui.cart[Number(el.getAttribute('data-i'))];if(!l)return;const p=findP(S,l.productId),n=(Number(l.qty)||0)+(a==='pos-inc'?1:-1);
+  if(n>p.qty){toast('Stock insuffisant pour '+p.name+' (disponible : '+p.qty+').','err');return;}
+  if(n<1)ui.cart.splice(Number(el.getAttribute('data-i')),1);else l.qty=n;refreshCart();return;}
+ if(a==='pos-rm'){ui.cart.splice(Number(el.getAttribute('data-i')),1);refreshCart();return;}
+ if(a==='pos-clear'){ui.cart=[];refreshCart();return;}
+ if(a==='pos-method'){ui.pos.method=el.getAttribute('data-m');refreshCart();return;}
+ if(a==='pos-cart'){ui.cartOpen=true;$('#cartbox').classList.add('open');return;}
+ if(a==='pos-close'){ui.cartOpen=false;$('#cartbox').classList.remove('open');return;}
+ if(a==='pos-newcust'){ui.cb='posCustomer';showModal(mhead('Nouveau client')+customerForm());return;}
+ if(a==='pos-validate'){doValidateSale(el);return;}
+ if(a==='sale-view'){showReceipt(id);return;}
+ if(a==='copy-receipt'){const s=S.sales.find(function(x){return x.id===id;});if(s)copyText(receiptText(s),'Reçu copié.');return;}
+ /* Produits */
+ if(a==='prod-new'){showModal(mhead('Nouveau produit')+productForm());return;}
+ if(a==='prod-edit'){showModal(mhead('Modifier le produit')+productForm(findP(S,id)));return;}
+ if(a==='prod-del'){const p=findP(S,id);ask('Supprimer « '+p.name+' » ? Cette action est définitive.',function(){mutate(function(){deleteProduct(S,id);},'Produit supprimé.');},'Supprimer');return;}
+ if(a==='stock-move'){stockModal(findP(S,id));return;}
+ if(a==='cat-edit'){const c=S.categories.find(function(x){return x.id===id;});showModal(mhead('Renommer la catégorie')+'<form class="fg" data-form="catren" data-id="'+id+'">'+field('Nom','name',c.name,{id:'cat-name',req:1})+'<div class="ferr" hidden></div><div class="head" style="margin:0"><span></span><div class="acts"><button type="button" class="btn btn-s" data-act="modal-close">Annuler</button><button class="btn btn-p" type="submit">Enregistrer</button></div></div></form>');return;}
+ if(a==='cat-del'){const c=S.categories.find(function(x){return x.id===id;});ask('Supprimer la catégorie « '+c.name+' » ?',function(){mutate(function(){deleteCategory(S,id);},'Catégorie supprimée.');},'Supprimer');return;}
+ /* Clients */
+ if(a==='cust-new'){ui.cb=null;showModal(mhead('Nouveau client')+customerForm());return;}
+ if(a==='cust-edit'){showModal(mhead('Modifier le client')+customerForm(S.customers.find(function(x){return x.id===id;})));return;}
+ if(a==='cust-view'){customerCard(id);return;}
+ if(a==='cust-del'){const c=S.customers.find(function(x){return x.id===id;});ask('Supprimer le client « '+c.name+' » ?',function(){mutate(function(){deleteCustomer(S,id);},'Client supprimé.');},'Supprimer');return;}
+ /* Crédits */
+ if(a==='cred-pay'){showModal(mhead('Encaisser un paiement')+payForm(S.credits.find(function(x){return x.id===id;})));return;}
+ if(a==='cred-hist'){const c=S.credits.find(function(x){return x.id===id;}),ps=S.payments.filter(function(p){return p.creditId===id;}).sort(function(x,y){return x.date<y.date?-1:1;});
+  showModal(mhead('Historique des paiements')+'<p class="muted" style="margin-bottom:10px">'+esc(custName(c.customerId))+' · reste '+fmt(c.balance)+'</p>'+tbl([{h:'Date'},{h:'Mode'},{h:'Réf.'},{h:'Montant',cls:'r'}],ps.map(function(p){return [fmtDT(p.date),esc(p.method)+(p.initial?' (initial)':''),esc(p.reference||'-'),'<b class="num">'+fmt(p.amount)+'</b>'];}),'<p class="muted">Aucun paiement.</p>'),true);return;}
+ /* Dépenses */
+ if(a==='exp-new'){showModal(mhead('Nouvelle dépense')+expenseForm());return;}
+ if(a==='exp-edit'){showModal(mhead('Modifier la dépense')+expenseForm(S.expenses.find(function(x){return x.id===id;})));return;}
+ if(a==='exp-del'){ask('Supprimer cette dépense ?',function(){mutate(function(){deleteExpense(S,id);},'Dépense supprimée.');},'Supprimer');return;}
+ /* Rapports & données */
+ if(a==='export-csv'){const k=el.getAttribute('data-k'),p=curPeriod();copyText(toCSV(csvRows(k,p)),'Données CSV copiées. Collez-les dans Excel ou Google Sheets.');return;}
+ if(a==='backup'){copyText(JSON.stringify(S),'Sauvegarde copiée.');return;}
+ if(a==='restore'){showModal(mhead('Restaurer une sauvegarde')+'<p class="muted sm" style="margin-bottom:8px">Cette action remplace les données actuelles de cette boutique.</p><form class="fg" data-form="restore"><textarea class="in mono" id="rs-json" name="json" rows="8" placeholder="Collez ici la sauvegarde"></textarea><div class="ferr" hidden></div><div class="head" style="margin:0"><span></span><div class="acts"><button type="button" class="btn btn-s" data-act="modal-close">Annuler</button><button class="btn btn-d" type="submit">Remplacer mes données</button></div></div></form>');return;}
+ if(a==='run-test'){const r=runScenario(),ok=r.every(function(x){return x.ok;});
+  $('#testout').innerHTML='<div class="alert '+(ok?'':'err')+'" style="'+(ok?'background:var(--ok-bg);color:var(--ok)':'')+';margin-bottom:10px">'+ic(ok?'check':'alert')+'<span>'+(ok?'Tous les contrôles sont réussis ('+r.length+').':'Certains contrôles ont échoué.')+'</span></div>'+tbl([{h:'Contrôle'},{h:'Attendu',cls:'r'},{h:'Obtenu',cls:'r'},{h:'Résultat'}],r.map(function(x){return [esc(x.label),'<span class="num">'+esc(x.expected)+'</span>','<span class="num">'+esc(x.actual)+'</span>',badge(x.ok?'OK':'Échec',x.ok?'ok':'err')];}));return;}
+});
+/* Renommage de catégorie (formulaire modal) */
+const _sf=submitForm;submitForm=async function(f){
+ if(f.getAttribute('data-form')==='catren'){const d=formData(f);try{renameCategory(S,f.getAttribute('data-id'),d.name);if(!USER.demo)save();closeModal();rerender();toast('Catégorie renommée.','ok');}catch(e){showErr(f,e instanceof AppError?e.message:'Cette opération n\'a pas pu être enregistrée.');}return;}
+ return _sf(f);};
+/* ---- Démarrage ---- */
+(function boot(){
+ document.documentElement.lang='fr';
+ try{const svg="<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='#0056D2'/><text x='32' y='43' font-size='30' font-weight='700' text-anchor='middle' fill='#FFFFFF' font-family='Arial,Helvetica,sans-serif'>C+</text></svg>";
+  const l=document.createElement('link');l.rel='icon';l.type='image/svg+xml';l.href='data:image/svg+xml,'+encodeURIComponent(svg);document.head.appendChild(l);}catch(e){}
+ const sid=store.get('cp:session');if(sid){const u=getUsers().find(function(x){return x.id===sid;});if(u){USER=Object.assign({},u,{demo:false});S=loadData(u);}}
+ render();
+})();
+</script>
+
+</html>
